@@ -1,88 +1,37 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
-           xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="TaskPaneApp">
+<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT License. -->
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+</head>
 
-  <Id>775091b3-e24a-4cf4-a65b-26976fda4f3c</Id>
-  <Version>1.0.0.0</Version>
-  <ProviderName>Contoso</ProviderName>
-  <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="Hello World Add-in"/>
-  <Description DefaultValue="A simple Hello World Office Add-in"/>
-  <Permissions>ReadWriteDocument</Permissions>
+<body>
+    <p>This add-in will set cell A1 to the value 'Hello world111!'.</p>
+    <button id="helloButton">Say hello</button>
 
-  <Hosts>
-    <Host Name="Workbook"/>
-  </Hosts>
+    <!-- The following image URL tracks diagnostic data for this sample add-in. Please remove the image tag if you reuse this sample in your own code project. -->
+    <img src="https://pnptelemetry.azurewebsites.net/pnp-officeaddins/samples/excel-add-in-hello-world-run" />
+</body>
 
-  <DefaultSettings>
-    <SourceLocation DefaultValue="https://kirryya.github.io/addIn/taskpane.html"/>
-  </DefaultSettings>
+<script>
+    Office.onReady((info) => {
+        // Check that we loaded into Excel
+        if (info.host === Office.HostType.Excel) {
+            document.getElementById("helloButton").onclick = sayHello;
+        }
+    });
 
-  <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
-    <Hosts>
-      <Host xsi:type="Workbook">
-        <DesktopFormFactor>
+    function sayHello() {
+        Excel.run(context => {
 
-          <!-- Custom Ribbon Tab -->
-          <ExtensionPoint xsi:type="PrimaryCommandSurface">
-            <CustomTab id="CustomTab1">
-              <Label resid="CustomTab.Label"/>
-              <Group id="CommandsGroup">
-                <Label resid="CommandsGroup.Label"/>
-                <Icon>
-                  <bt:Image size="16" resid="Icon.16x16"/>
-                  <bt:Image size="32" resid="Icon.32x32"/>
-                  <bt:Image size="80" resid="Icon.80x80"/>
-                </Icon>
-                <Control xsi:type="Button" id="TaskpaneButton">
-                  <Label resid="TaskpaneButton.Label"/>
-                  <Supertip>
-                    <Title resid="TaskpaneButton.SupertipTitle"/>
-                    <Description resid="TaskpaneButton.SupertipText"/>
-                  </Supertip>
-                  <Icon>
-                    <bt:Image size="16" resid="Icon.16x16"/>
-                    <bt:Image size="32" resid="Icon.32x32"/>
-                    <bt:Image size="80" resid="Icon.80x80"/>
-                  </Icon>
-                  <Action xsi:type="ShowTaskpane">
-                    <TaskpaneId>ButtonId1</TaskpaneId>
-                    <SourceLocation resid="Taskpane.Url"/>
-                  </Action>
-                </Control>
-              </Group>
-            </CustomTab>
-          </ExtensionPoint>
+            // Insert text 'Hello world!' into cell A1.
+            context.workbook.worksheets.getActiveWorksheet().getRange("A1").values = [['Hello world1!']];
 
-        </DesktopFormFactor>
-      </Host>
-    </Hosts>
+            // sync the context to run the previous API call, and return.
+            return context.sync();
+        });
+    }
+</script>
 
-    <!-- Resources -->
-    <Resources>
-      <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="https://officedev.github.io/Office-Add-in-samples/Samples/hello-world/excel-hello-world/assets/icon-16.png"/>
-        <bt:Image id="Icon.32x32" DefaultValue="https://officedev.github.io/Office-Add-in-samples/Samples/hello-world/excel-hello-world/assets/icon-32.png"/>
-        <bt:Image id="Icon.80x80" DefaultValue="https://officedev.github.io/Office-Add-in-samples/Samples/hello-world/excel-hello-world/assets/icon-80.png"/>
-      </bt:Images>
-
-      <bt:Urls>
-        <bt:Url id="Taskpane.Url" DefaultValue="https://kirryya.github.io/addIn/taskpane.html"/>
-      </bt:Urls>
-
-      <bt:ShortStrings>
-        <bt:String id="CustomTab.Label" DefaultValue="My Add-in"/>
-        <bt:String id="CommandsGroup.Label" DefaultValue="Contoso Add-in"/>
-        <bt:String id="TaskpaneButton.Label" DefaultValue="Hello World"/>
-        <bt:String id="TaskpaneButton.SupertipTitle" DefaultValue="Hello World"/>
-      </bt:ShortStrings>
-
-      <bt:LongStrings>
-        <bt:String id="TaskpaneButton.SupertipText" DefaultValue="Open the Hello World Add-in"/>
-      </bt:LongStrings>
-    </Resources>
-
-  </VersionOverrides>
-</OfficeApp>
+</html>
