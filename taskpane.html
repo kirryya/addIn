@@ -15,61 +15,95 @@
         }
         #settingsModal div {
             background:white;
-            padding:20px;
-            border-radius:8px;
-            width:300px;
+            padding: 12px 20px 20px 20px;
+            border-radius:12px;
+            max-width: 800px;
         }
         button { margin-top: 10px; }
+
+        #settingsForm {
+            width: 100%;
+        }
+
+        .key_input {
+            width: 90%;
+            min-height: 30px;
+            max-height: 30px;
+            margin-top: 10px;
+
+            opacity: 1;
+            border-radius: 12px;
+            border-width: 1px;
+            padding: 4px 12px;
+        }
     </style>
 </head>
 <body>
-    <h2>SmartPricing</h2>
 
-    <div id="settingsModal">
-      <div>
-        <h3>Настройки</h3>
+<div id="settingsModal">
+    <div>
+         <span id="closeModal" style="
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;">&times;</span>
+
+        <h3>Общие Настройки</h3>
         <form id="settingsForm">
-          <label>Название листа: <input type="text" name="sheetName" required></label><br><br>
-          <label>Количество листов: <input type="number" name="sheetCount" min="1" value="1" required></label><br><br>
-          <button type="submit">OK</button>
-          <button type="button" id="closeModal">Отмена</button>
+            <label>Лицензионный ключ:
+                <input type="text" name="sheetCount" class="key_input" required>
+            </label>
+            <div style="text-align: right; max-width: 800px">
+                <button type="submit">Сохранить</button>
+            </div>
         </form>
-      </div>
     </div>
+</div>
 
 <script>
-Office.onReady((info) => {
-    if (info.host === Office.HostType.Excel) {
+    Office.onReady((info) => {
+        if (info.host === Office.HostType.Excel) {
 
-        const modal = document.getElementById("settingsModal");
-        const form = document.getElementById("settingsForm");
-        const closeModalBtn = document.getElementById("closeModal");
+            const modal = document.getElementById("settingsModal");
+            const form = document.getElementById("settingsForm");
+            const closeModalBtn = document.getElementById("closeModal");
 
-        // Открываем модальное окно сразу после того, как Task Pane открылся
-        modal.style.display = "flex";
+            // Открываем модальное окно сразу после того, как Task Pane открылся
+            modal.style.display = "flex";
 
-        closeModalBtn.onclick = () => {
-            modal.style.display = "none";
-        };
+            closeModalBtn.onclick = () => {
+                modal.style.display = "none";
+            };
 
-        form.onsubmit = async (e) => {
-            e.preventDefault();
-            const sheetName = form.sheetName.value;
-            const sheetCount = parseInt(form.sheetCount.value);
+                form.onsubmit = async (e) => {
+                e.preventDefault();
 
-            await Excel.run(async (context) => {
+                await Excel.run(async (context) => {
                 const workbook = context.workbook;
-                for (let i = 0; i < sheetCount; i++) {
-                    workbook.worksheets.add(`${sheetName}_${i+1}`);
-                }
-                await context.sync();
-            });
 
-            modal.style.display = "none";
-            form.reset();
-        };
-    }
-});
+                // Добавляем листы
+                const sheetsData = [
+                { name: "Ассортимент", values: [["Товар", "Цена", "Количество"], ["Товар1", 100, 10], ["Товар2", 200, 5]] },
+                { name: "Продажи", values: [["Дата", "Товар", "Количество", "Сумма"], ["01.09.2025", "Товар1", 2, 200], ["01.09.2025", "Товар2", 1, 200]] },
+                { name: "Цены конкурентов", values: [["Конкурент", "Товар", "Цена"], ["CompA", "Товар1", 105], ["CompB", "Товар2", 195]] }
+                ];
+
+                sheetsData.forEach(sheet => {
+                const newSheet = workbook.worksheets.add(sheet.name);
+                const range = newSheet.getRangeByIndexes(0, 0, sheet.values.length, sheet.values[0].length);
+                range.values = sheet.values;
+                });
+
+                await context.sync();
+                });
+
+                modal.style.display = "none";
+                form.reset();
+                };
+        }
+    });
 </script>
 </body>
 </html>
