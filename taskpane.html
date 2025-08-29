@@ -1,251 +1,212 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <title>SmartPricing Task Pane</title>
-    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-    <style>
-        #settingsModal {
-            display: block;
-            position: fixed;
-            top:0; left:0;
-            width:100%; height:100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center; align-items: center;
-            font-family: Roboto, sans-serif;
-        }
+<meta charset="utf-8">
+<title>SmartPricing Dialog</title>
+<script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+<style>
+body {
+    font-family: Roboto, sans-serif;
+    padding: 20px;
+}
 
-        #settingsModal > div:first-child {
-            background: white;
-            padding: 12px 20px 20px 20px;
-            border-radius:12px;
-            max-width: 800px;
-        }
+h3 {
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 12px;
+}
 
-        .subtitle {
-            font-weight: 400;
-            font-size: 14px;
-            line-height: 22px;
-            vertical-align: middle;
-            width: 100%;
-        }
-        button {
-            font-weight: 400;
-            font-size: 18px;
-            line-height: 24px;
-            text-align: center;
+.subtitle {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    margin-top: 10px;
+}
 
-            cursor: pointer;
-            width: 122px;
-            height: 39px;
-            gap: 10px;
-            opacity: 1;
-            border-radius: 2px;
-            padding: 6px 15px;
-            border: 1px solid #D9D9D9;
+input[type=text] {
+    width: 90%;
+    min-height: 30px;
+    max-height: 30px;
+    margin-top: 4px;
+    border-radius: 12px;
+    padding: 4px 12px;
+    border: 1px solid #D9D9D9;
+    outline: none;
+}
 
-            margin-top: 10px;
+button {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24px;
+    text-align: center;
+    cursor: pointer;
+    width: 122px;
+    height: 39px;
+    gap: 10px;
+    border-radius: 2px;
+    padding: 6px 15px;
+    border: 1px solid #D9D9D9;
+    margin-top: 20px;
+    background: #ffffff;
+}
 
-            background: #ffffff;
-        }
+/* Чекбоксы */
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    font-family: sans-serif;
+    margin-top: 6px;
+}
 
-        #settingsForm {
-            min-width: 100%;
-            margin-top: 24px;
-            display: flex;
-            flex-direction: column;
-            row-gap: 12px;
-            align-items: flex-start;
+.custom-checkbox input { display: none; }
 
-        }
+.custom-checkbox span {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #D9D9D9;
+    border-radius: 4px;
+    display: inline-block;
+    position: relative;
+    background: white;
+}
 
-        .title {
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 22px;
-            vertical-align: middle;
-        }
+.custom-checkbox input:checked + span {
+    background-color: #10793c;
+    border-color: #10793c;
+}
 
-        .key_input {
-            width: 90%;
-            min-height: 30px;
-            max-height: 30px;
-            margin-top: 10px;
+.custom-checkbox span::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 1px;
+    width: 6px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    opacity: 0;
+}
 
-            opacity: 1;
-            border-radius: 12px;
-            padding: 4px 12px;
-            border: 1px solid #D9D9D9;
-            outline: none;
-        }
+.custom-checkbox input:checked + span::after {
+    opacity: 1;
+}
 
-        .custom-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            user-select: none;
-            font-family: sans-serif;
-        }
+/* Радиокнопки */
+.custom-radio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    font-family: sans-serif;
+    margin-top: 6px;
+}
 
-        .custom-checkbox input {
-            display: none;
-        }
+.custom-radio input { display: none; }
 
-        .custom-checkbox span {
-            width: 20px;
-            height: 20px;
-            border: 1px solid #D9D9D9;
-            border-radius: 4px;
-            display: inline-block;
-            position: relative;
-            background: white;
-        }
+.custom-radio span {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #D9D9D9;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    background: white;
+}
 
-        .custom-checkbox input:checked + span {
-            background-color: #10793c;
-            border-color: #10793c;
-        }
+.custom-radio span::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #10793c;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
 
-        .custom-checkbox span::after {
-            content: '';
-            position: absolute;
-            left: 5px;
-            top: 1px;
-            width: 6px;
-            height: 12px;
-            border: solid white;
-            border-width: 0 2px 2px 0;
-            transform: rotate(45deg);
-            opacity: 0;
-        }
+.custom-radio input:checked + span {
+    border-color: #10793c;
+}
 
-        .custom-checkbox input:checked + span::after {
-            opacity: 1;
-        }
-
-        .custom-radio {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            user-select: none;
-            font-family: sans-serif;
-        }
-
-        .custom-radio input {
-            display: none;
-        }
-
-        .custom-radio span {
-            width: 20px;
-            height: 20px;
-            border: 1px solid #D9D9D9;
-            border-radius: 50%;
-            display: inline-block;
-            position: relative;
-            background: white;
-        }
-
-        .custom-radio span::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #10793c;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .custom-radio input:checked + span {
-            border-color: #10793c;
-        }
-
-        .custom-radio input:checked + span::after {
-            opacity: 1;
-        }
-    </style>
+.custom-radio input:checked + span::after {
+    opacity: 1;
+}
+</style>
 </head>
 <body>
 
-<div id="settingsModal">
+<h3>Общие Настройки</h3>
+
+<form id="settingsForm">
+    <label class="subtitle">Лицензионный ключ
+        <input type="text" name="licenseKey" required autocomplete="off">
+    </label>
+
     <div>
-        <span class="title">Общие Настройки</span>
-        <form id="settingsForm">
-            <label class="subtitle">Лицензионный ключ
-                <input type="text" name="sheetCount" class="key_input" required autocomplete="off">
-            </label>
-            <div style="display: flex; flex-direction: column; row-gap: 12px; font-weight: 400; font-size: 14px; line-height: 22px; letter-spacing: 0;">
-            <span class="subtitle">Коды ОКРБ</span>
-                <label class="custom-checkbox">
-                    <input type="checkbox" name="useCodes">
-                    <span></span>
-                    Использовать
-                </label>
-            </div>
-            <div style="display: flex; flex-direction: column; row-gap: 12px">
-                <span class="subtitle">Метод поиска рекомендаций KVI</span>
-                <div style="display: flex; flex-direction: column; row-gap: 12px; font-weight: 400; font-size: 14px; line-height: 22px; letter-spacing: 0;">
-                    <label class="custom-radio">
-                        <input type="radio" name="kviMethod" value="ml" checked>
-                        <span></span>
-                        С использованием машинного обучения
-                    </label>
-                    <label class="custom-radio">
-                        <input type="radio" name="kviMethod" value="clustering">
-                        <span></span>
-                        Методы кластеризации
-                    </label>
-                </div>
-            </div>
-            <div style="margin-left: auto; max-width: 800px">
-                <button type="submit">Сохранить</button>
-            </div>
-        </form>
+        <span class="subtitle">Коды ОКРБ</span>
+        <label class="custom-checkbox">
+            <input type="checkbox" name="useCodes">
+            <span></span>
+            Использовать
+        </label>
     </div>
-</div>
+
+    <div>
+        <span class="subtitle">Метод поиска рекомендаций KVI</span>
+        <label class="custom-radio">
+            <input type="radio" name="kviMethod" value="ml" checked>
+            <span></span>
+            С использованием машинного обучения
+        </label>
+        <label class="custom-radio">
+            <input type="radio" name="kviMethod" value="clustering">
+            <span></span>
+            Методы кластеризации
+        </label>
+    </div>
+
+    <button type="submit">Сохранить</button>
+</form>
 
 <script>
-    Office.onReady((info) => {
-        if (info.host === Office.HostType.Excel) {
+Office.onReady(() => {
+    const form = document.getElementById("settingsForm");
 
-            const modal = document.getElementById("settingsModal");
-            const form = document.getElementById("settingsForm");
+    form.onsubmit = async (e) => {
+        e.preventDefault();
 
-            // Открываем модальное окно сразу после того, как Task Pane открылся
-            modal.style.display = "flex";
+        await Excel.run(async (context) => {
+            const workbook = context.workbook;
 
-            form.onsubmit = async (e) => {
-                e.preventDefault();
+            const sheetsData = [
+                { name: "Ассортимент", values: [["Товар","Цена","Количество"],["Товар1",100,10],["Товар2",200,5]] },
+                { name: "Продажи", values: [["Дата","Товар","Количество","Сумма"],["01.09.2025","Товар1",2,200],["01.09.2025","Товар2",1,200]] },
+                { name: "Цены конкурентов", values: [["Конкурент","Товар","Цена"],["CompA","Товар1",105],["CompB","Товар2",195]] }
+            ];
 
-                await Excel.run(async (context) => {
-                    const workbook = context.workbook;
+            sheetsData.forEach(sheet => {
+                const newSheet = workbook.worksheets.add(sheet.name);
+                const range = newSheet.getRangeByIndexes(0, 0, sheet.values.length, sheet.values[0].length);
+                range.values = sheet.values;
+            });
 
-                    // Добавляем листы
-                    const sheetsData = [
-                        { name: "Ассортимент", values: [["Товар", "Цена", "Количество"], ["Товар1", 100, 10], ["Товар2", 200, 5]] },
-                        { name: "Продажи", values: [["Дата", "Товар", "Количество", "Сумма"], ["01.09.2025", "Товар1", 2, 200], ["01.09.2025", "Товар2", 1, 200]] },
-                        { name: "Цены конкурентов", values: [["Конкурент", "Товар", "Цена"], ["CompA", "Товар1", 105], ["CompB", "Товар2", 195]] }
-                    ];
+            await context.sync();
+        });
 
-                    sheetsData.forEach(sheet => {
-                        const newSheet = workbook.worksheets.add(sheet.name);
-                        const range = newSheet.getRangeByIndexes(0, 0, sheet.values.length, sheet.values[0].length);
-                        range.values = sheet.values;
-                    });
-
-                    await context.sync();
-                });
-
-                modal.style.display = "none";
-                form.reset();
-            };
-        }
-    });
+        // Отправляем сообщение родителю и закрываем диалог
+        Office.context.ui.messageParent("saved");
+        window.close();
+    };
+});
 </script>
+
 </body>
 </html>
