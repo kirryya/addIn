@@ -231,21 +231,6 @@
             form.onsubmit = async (e) => {
                 e.preventDefault();
 
-                // Получаем значения формы
-                const formData = new FormData(form);
-                const formValues = {};
-                formData.forEach((value, key) => {
-                    formValues[key] = value;
-                });
-
-                // Для чекбоксов нужно отдельно проверять, выбран ли
-                form.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                    formValues[checkbox.name] = checkbox.checked;
-                });
-
-                console.log("Значения формы:", formValues);
-
-
                 await Excel.run(async (context) => {
                 const workbook = context.workbook;
 
