@@ -6,7 +6,7 @@
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
     <style>
         #settingsModal {
-            display: none;
+            display: none; /* будет включено через JS */
             position: fixed;
             top:0; left:0;
             width:100%; height:100%;
@@ -24,7 +24,6 @@
 </head>
 <body>
     <h2>SmartPricing</h2>
-    <button id="openSettings">Открыть Настройки</button>
 
     <!-- Модальное окно -->
     <div id="settingsModal">
@@ -42,35 +41,21 @@
 <script>
 Office.onReady((info) => {
     if (info.host === Office.HostType.Excel) {
-        // Открытие модального
-        document.getElementById("openSettings").onclick = () => {
-            document.getElementById("settingsModal").style.display = "flex";
-        };
-        document.getElementById("closeModal").onclick = () => {
-            document.getElementById("settingsModal").style.display = "none";
+
+        const modal = document.getElementById("settingsModal");
+        const form = document.getElementById("settingsForm");
+        const closeModalBtn = document.getElementById("closeModal");
+
+        // Сразу открываем модальное окно
+        modal.style.display = "flex";
+
+        // Закрытие по кнопке "Отмена"
+        closeModalBtn.onclick = () => {
+            modal.style.display = "none";
         };
 
         // Обработка формы
-        document.getElementById("settingsForm").onsubmit = async (e) => {
+        form.onsubmit = async (e) => {
             e.preventDefault();
-            const form = e.target;
             const sheetName = form.sheetName.value;
-            const sheetCount = parseInt(form.sheetCount.value);
-
-            await Excel.run(async (context) => {
-                const workbook = context.workbook;
-                for (let i = 0; i < sheetCount; i++) {
-                    workbook.worksheets.add(`${sheetName}_${i+1}`);
-                }
-                await context.sync();
-            });
-
-            // Закрываем модальное и сбрасываем форму
-            document.getElementById("settingsModal").style.display = "none";
-            form.reset();
-        };
-    }
-});
-</script>
-</body>
-</html>
+            const sheetCount = parseInt(form.she
