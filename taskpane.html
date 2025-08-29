@@ -234,12 +234,6 @@
                 await Excel.run(async (context) => {
                 const workbook = context.workbook;
 
-                const sheet1 = workbook.worksheets.getItemOrNullObject("Лист1");
-                await context.sync();
-                if (!sheet1.isNullObject) {
-                    sheet1.delete();
-                }
-
                 const sheetsData = [
                 { name: "Ассортимент", values: [["Товар", "Цена", "Количество"], ["Товар1", 100, 10], ["Товар2", 200, 5]] },
                 { name: "Продажи", values: [["Дата", "Товар", "Количество", "Сумма"], ["01.09.2025", "Товар1", 2, 200], ["01.09.2025", "Товар2", 1, 200]] },
