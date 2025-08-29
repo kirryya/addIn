@@ -6,7 +6,7 @@
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
     <style>
         #settingsModal {
-            display: none;
+            display: block;
             position: fixed;
             top:0; left:0;
             width:100%; height:100%;
@@ -209,6 +209,43 @@
     </div>
 </div>
 
+<script>
+    Office.onReady((info) => {
+        if (info.host === Office.HostType.Excel) {
 
+            const modal = document.getElementById("settingsModal");
+            const form = document.getElementById("settingsForm");
+
+            // Открываем модальное окно сразу после того, как Task Pane открылся
+            modal.style.display = "flex";
+
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+
+                await Excel.run(async (context) => {
+                    const workbook = context.workbook;
+
+                    // Добавляем листы
+                    const sheetsData = [
+                        { name: "Ассортимент", values: [["Товар", "Цена", "Количество"], ["Товар1", 100, 10], ["Товар2", 200, 5]] },
+                        { name: "Продажи", values: [["Дата", "Товар", "Количество", "Сумма"], ["01.09.2025", "Товар1", 2, 200], ["01.09.2025", "Товар2", 1, 200]] },
+                        { name: "Цены конкурентов", values: [["Конкурент", "Товар", "Цена"], ["CompA", "Товар1", 105], ["CompB", "Товар2", 195]] }
+                    ];
+
+                    sheetsData.forEach(sheet => {
+                        const newSheet = workbook.worksheets.add(sheet.name);
+                        const range = newSheet.getRangeByIndexes(0, 0, sheet.values.length, sheet.values[0].length);
+                        range.values = sheet.values;
+                    });
+
+                    await context.sync();
+                });
+
+                modal.style.display = "none";
+                form.reset();
+            };
+        }
+    });
+</script>
 </body>
 </html>
