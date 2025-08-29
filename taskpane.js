@@ -18,3 +18,5 @@ function openSettingsDialog() {
         }
     );
 }
+
+window.openSettingsDialog = openSettingsDialog;
