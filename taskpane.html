@@ -215,14 +215,9 @@
 
             const modal = document.getElementById("settingsModal");
             const form = document.getElementById("settingsForm");
-            const closeModalBtn = document.getElementById("closeModal");
 
             // Открываем модальное окно сразу после того, как Task Pane открылся
             modal.style.display = "flex";
-
-            closeModalBtn.onclick = () => {
-                modal.style.display = "none";
-            };
 
             form.onsubmit = async (e) => {
                 e.preventDefault();
