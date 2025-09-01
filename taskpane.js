@@ -7,7 +7,7 @@ Office.onReady(() => {
 function generalSettings(event) {
     Office.context.ui.displayDialogAsync(
         "https://kirryya.github.io/addIn/taskpane.html",
-        { height: 40, width: 60, displayInIframe: true },
+        { height: 40, width: 50, displayInIframe: true },
         (asyncResult) => {
             const dialog = asyncResult.value;
 
@@ -27,13 +27,14 @@ function generalSettings(event) {
 function newTemplate(event) {
     Office.context.ui.displayDialogAsync(
         "https://kirryya.github.io/addIn/dailog.html",
-        { height: 40, width: 60, displayInIframe: true }
+        { height: 40, width: 50, displayInIframe: true }
     );
 
     if (event && typeof event.completed === "function") {
         event.completed();
     }
 }
+
 
 
 
