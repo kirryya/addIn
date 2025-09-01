@@ -1,8 +1,3 @@
-Office.onReady(() => {
-    Office.actions.associate("generalSettings", generalSettings);
-    Office.actions.associate("newTemplate", newTemplate);
-});
-
 function generalSettings(event) {
     Office.context.ui.displayDialogAsync(
         "https://kirryya.github.io/addIn/taskpane.html",
@@ -24,3 +19,6 @@ function newTemplate(event) {
         event.completed();
     }
 }
+
+Office.actions.associate("generalSettings", generalSettings);
+Office.actions.associate("newTemplate", newTemplate);
