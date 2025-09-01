@@ -16,5 +16,4 @@ function openSettingsDialog() {
     );
 }
 
-// делаем функцию глобальной для Ribbon
-window.openSettingsDialog = openSettingsDialog;
+Office.actions.associate("openSettingsDialog", openSettingsDialog);
