@@ -1,6 +1,6 @@
 function openSettingsDialog() {
     Office.context.ui.displayDialogAsync(
-        "https://kirryya.github.io/addIn/taskpane.html",
+        "https://kirryya.github.io/addIn/dailog.html",
         { height: 40, width: 60, displayInIframe: false }
     );
 }
