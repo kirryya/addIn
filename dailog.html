@@ -1,28 +1,17 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Диалог</title>
-    <script type="text/javascript" src="taskpane.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            text-align: center;
+    <meta charset="utf-8" />
+    <title>Commands</title>
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <script>
+        function openSettingsDialog() {
+            Office.context.ui.displayDialogAsync("https://kirryya.github.io/addIn/dailog.html");
         }
-        h1 {
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-        button {
-            padding: 10px 15px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-    </style>
+
+        Office.actions.associate("openSettingsDialog", openSettingsDialog);
+    </script>
 </head>
 <body>
-<h1>Диалоговое окно</h1>
-<button onclick="window.close()">Закрыть</button>
 </body>
 </html>
