@@ -1,5 +1,5 @@
 Office.onReady(() => {
-    // Привязываем идентификатор insertSheets (из манифеста) к реальной функции
+    // Привязываем идентификаторы (из манифеста) к реальной функции
     Office.actions.associate("generalSettings", generalSettings);
     Office.actions.associate("newTemplate", newTemplate);
 });
@@ -34,5 +34,6 @@ function newTemplate(event) {
         event.completed();
     }
 }
+
 
 
