@@ -7,7 +7,7 @@ Office.onReady(() => {
 function generalSettings(event) {
     Office.context.ui.displayDialogAsync(
         "https://kirryya.github.io/addIn/taskpane.html",
-        {height: 45, width: 40, displayInIframe: true},
+        {height: 40, width: 40, displayInIframe: true},
         function (asyncResult) {
             const dialog = asyncResult.value;
 
@@ -69,6 +69,7 @@ function newTemplate(event) {
         event.completed();
     }
 }
+
 
 
 
