@@ -2,6 +2,7 @@ Office.onReady(() => {
     // Привязываем идентификаторы (из манифеста) к реальной функции
     Office.actions.associate("generalSettings", generalSettings);
     Office.actions.associate("newTemplate", newTemplate);
+    Office.actions.associate("regularPrices", regularPrices);
 });
 
 function generalSettings(event) {
@@ -55,9 +56,7 @@ function generalSettings(event) {
             event.completed();
         }
     );
-}    
-
-
+}
 
 function newTemplate(event) {
     Office.context.ui.displayDialogAsync(
@@ -70,6 +69,13 @@ function newTemplate(event) {
     }
 }
 
+function regularPrices(event) {
+    Office.context.ui.displayDialogAsync(
+        "https://kirryya.github.io/addIn/regular-prices.html",
+        { height: 40, width: 50, displayInIframe: true }
+    );
 
-
-
+    if (event && typeof event.completed === "function") {
+        event.completed();
+    }
+}
