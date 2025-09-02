@@ -9,8 +9,11 @@
             display: flex;
             align-items: flex-start;
             flex-direction: column;
+            justify-content: space-between;
             background: white;
             padding: 12px 20px 20px 20px;
+            width: calc(100% - 32px);
+            height: 100%;
         }
 
         .title {
@@ -80,7 +83,9 @@
         }
 
         .sub-tab-pane.active {
-            display: block;
+            display: flex;
+            flex-direction: column;
+            row-gap: 12px;
         }
 
         .subtitle {
@@ -124,6 +129,8 @@
             flex-direction: column;
             row-gap: 12px;
             align-items: flex-start;
+            width: 100%;
+            height: calc(100vh - 135px);
         }
 
         .key_input {
@@ -144,7 +151,7 @@
             min-width: 728px;
             min-height: 40px;
             max-height: 40px;
-            margin-top: 10px;
+            margin-top: 5px;
 
             opacity: 1;
             border-radius: 12px;
@@ -214,6 +221,16 @@
 
         .custom-checkbox input:checked + span::after {
             opacity: 1;
+        }
+
+        .checkbox-title {
+            display: flex;
+            flex-direction: column;
+            row-gap: 12px;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 22px;
+            letter-spacing: 0;
         }
 
         .custom-radio {
@@ -312,6 +329,34 @@
                                 <option value="chemistry">Сбалансированная</option>
                             </select>
                         </label>
+                        <div class="checkbox-title">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="useCodes">
+                                <span></span>
+                                Использовать вероятностный подход
+                            </label>
+                        </div>
+                        <div class="checkbox-title">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" name="useCodes">
+                                    <span></span>
+                                    Компенсировать снижение целевых показателей
+                                </label>
+                            </div>
+                        <div class="checkbox-title">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" name="useCodes">
+                                    <span></span>
+                                    Подбор оптимальных параметров расчета
+                                </label>
+                            </div>
+                        <div class="checkbox-title">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" name="useCodes">
+                                    <span></span>
+                                    Проверять на предел снижения рентабельности
+                                </label>
+                            </div>
                     </div>
 
                     <!-- Подтаб 2 -->
@@ -347,7 +392,7 @@
 
 
             </div>
-        <div style="margin-left: auto; margin-top:20px;">
+        <div style="margin-left: auto; margin-top: auto;">
             <button type="submit">OK</button>
             <button type="button" id="close-button">Отмена</button>
         </div>
