@@ -16,8 +16,32 @@ function generalSettings(event) {
             // Обработка сообщений из диалога
             dialog.addEventHandler(Office.EventType.DialogMessageReceived, async (args) => {
                 if (args.message === "createSheets") {
+
+                 // === Получение текущего времени через HTTP ===
+                    let currentTime = "";
+                    try {
+                        const response = await fetch("https://worldtimeapi.org/api/timezone/Europe/Moscow");
+                        const data = await response.json();
+                        currentTime = data.datetime;
+                        console.log("Текущее время:", currentTime);
+                    } catch (err) {
+                        console.error("Ошибка при запросе времени:", err);
+                    }
+                    // ============================================
+                    
                     await Excel.run(async (context) => {
                         const workbook = context.workbook;
+
+                         // Вставляем время в ячейку A1 листа Лист1
+                        let timeSheet = workbook.worksheets.getItemOrNullObject("Лист1");
+                        timeSheet.load("name");
+                        await context.sync();
+
+                        if (timeSheet.isNullObject) {
+                            timeSheet = workbook.worksheets.add("Лист1");
+                        }
+
+                        timeSheet.getRange("A1").values = [[currentTime]];
 
                         const sheetsData = [
                             {
@@ -91,3 +115,4 @@ function competitivePrices(event) {
         event.completed();
     }
 }
+
