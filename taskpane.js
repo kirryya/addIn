@@ -97,7 +97,7 @@ function newTemplate(event) {
 function regularPrices(event) {
     Office.context.ui.displayDialogAsync(
         "https://kirryya.github.io/addIn/regular-prices.html",
-        { height: 40, width: 50, displayInIframe: true }
+        { height: 40, width: 55, displayInIframe: true }
     );
 
     if (event && typeof event.completed === "function") {
@@ -115,4 +115,5 @@ function competitivePrices(event) {
         event.completed();
     }
 }
+
 
