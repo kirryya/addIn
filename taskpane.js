@@ -3,6 +3,7 @@ Office.onReady(() => {
     Office.actions.associate("generalSettings", generalSettings);
     Office.actions.associate("newTemplate", newTemplate);
     Office.actions.associate("regularPrices", regularPrices);
+    Office.actions.associate("competitivePrices", competitivePrices);
 });
 
 function generalSettings(event) {
@@ -72,6 +73,17 @@ function newTemplate(event) {
 function regularPrices(event) {
     Office.context.ui.displayDialogAsync(
         "https://kirryya.github.io/addIn/regular-prices.html",
+        { height: 40, width: 50, displayInIframe: true }
+    );
+
+    if (event && typeof event.completed === "function") {
+        event.completed();
+    }
+}
+
+function competitivePrices(event) {
+    Office.context.ui.displayDialogAsync(
+        "https://kirryya.github.io/addIn/competitive-prices.html",
         { height: 40, width: 50, displayInIframe: true }
     );
 
