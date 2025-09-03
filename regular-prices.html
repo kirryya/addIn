@@ -12,7 +12,7 @@
             justify-content: space-between;
             background: white;
             padding: 12px 20px 20px 20px;
-            width: calc(100% - 32px);
+            width: 782px;
             height: 100%;
         }
 
@@ -55,13 +55,12 @@
             display: flex;
             flex-direction: column;
             row-gap: 12px;
-            min-width: 950px;
+            max-width: 782px;
         }
 
         #subTabs {
             display: flex;
             flex-wrap: wrap;
-            gap: 4px;
         }
 
         .sub-tab-button {
@@ -69,7 +68,8 @@
             cursor: pointer;
             border: none;
             min-width: fit-content;
-            font-size: 13px;
+            font-size: 12px;
+            width: fit-content;
         }
 
         .sub-tab-button.active {
@@ -93,7 +93,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 924px
+
         }
 
         .subtitle {
@@ -101,11 +101,12 @@
             font-size: 14px;
             line-height: 22px;
             vertical-align: middle;
-            width: 100%;
         }
 
         .sub-tab-container_subtitle {
-            max-width: 50%;
+            display: flex;
+            flex-direction: column;
+            max-width: 368px;
         }
 
         button {
@@ -146,7 +147,7 @@
         }
 
         .key_input {
-            width: 100%;
+            min-width: 359px;
             max-width: 924px;
             min-height: 30px;
             max-height: 30px;
@@ -156,6 +157,10 @@
             padding: 4px 12px;
             border: 1px solid #D9D9D9;
             outline: none;
+        }
+
+        .double {
+            max-width: 342px; min-width: 342px
         }
 
         .key_select {
@@ -369,19 +374,42 @@
                                 </label>
                             </div>
                         <label class="subtitle">Минимальная рентабельность SKU, %
-                            <input type="text" name="sheetCount" class="key_input" autocomplete="off">
+                            <input type="text" name="sheetCount" class="key_input" style="width: 758px" autocomplete="off">
                         </label>
                         <div class="sub-tab-container">
-                            <div class="sub-tab-container_subtitle" style="max-width: 400px">
-                                <label class="subtitle">Предел снижения всех товаров, кроме KVI, СТМ, КЦО и Новинок, %
-                                    <input type="text" name="sheetCount" class="key_input" autocomplete="off">
-                                </label>
+                            <div class="sub-tab-container_subtitle">
+                                <label for="sheetCount1" class="subtitle">Предел снижения всех товаров, кроме KVI, СТМ, КЦО и Новинок, %</label>
+                                <input type="text" id="sheetCount1" name="sheetCount" class="key_input double" autocomplete="off">
                             </div>
                             <div class="sub-tab-container_subtitle">
-                                <label class="subtitle">Предел увеличения цены всех товаров, кроме KVI, СТМ и Новинок, %
-                                    <input type="text" name="sheetCount" class="key_input" autocomplete="off">
-                                </label>
+                                <label for="sheetCount2" class="subtitle">Предел увеличения цены всех товаров, кроме KVI, СТМ и Новинок, %</label>
+                                <input type="text" id="sheetCount2" name="sheetCount" class="key_input double" autocomplete="off">
                             </div>
+                        </div>
+                        <div class="sub-tab-container">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="sheetCount3" class="subtitle">Ограничение изменения цены, %</label>
+                                <input type="text" id="sheetCount3" name="sheetCount" class="key_input double" autocomplete="off">
+                            </div>
+                            <div class="sub-tab-container_subtitle">
+                                <label for="sheetCount4" class="subtitle">Предел увеличения цены за период, %</label>
+                                <input type="text" id="sheetCount4" name="sheetCount" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="sub-tab-container">
+                            <div class="sub-tab-container_subtitle">
+                                <div class="sub-tab-container_subtitle">
+                                    <label for="sheetCount5" class="subtitle">Минимальная рентабельность для ЗЦ поставщиков, %</label>
+                                    <input type="text" id="sheetCount5" name="sheetCount" class="key_input double" autocomplete="off">
+                                </div>
+                            </div>
+                            <label class="subtitle" style="max-width: 368px;">Период
+                                <select id="periodSelect" name="period" class="key_select" style="min-width: 368px" >
+                                    <option value="food" selected>Неделя</option>
+                                    <option value="drinks">Месяц</option>
+                                    <option value="chemistry">Год</option>
+                                </select>
+                            </label>
                         </div>
                     </div>
 
