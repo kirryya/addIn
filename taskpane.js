@@ -17,7 +17,7 @@ function generalSettings(event) {
             dialog.addEventHandler(Office.EventType.DialogMessageReceived, async (args) => {
                 if (args.message === "createSheets") {
 
-                 // === Получение текущего времени через HTTP ===
+                    // === Получение текущего времени через HTTP ===
                     let currentTime = "";
                     try {
                         const response = await fetch("https://worldtimeapi.org/api/timezone/Europe/Moscow");
@@ -28,11 +28,11 @@ function generalSettings(event) {
                         console.error("Ошибка при запросе времени:", err);
                     }
                     // ============================================
-                    
+
                     await Excel.run(async (context) => {
                         const workbook = context.workbook;
 
-                         // Вставляем время в ячейку A1 листа Лист1
+                        // Вставляем время в ячейку A1 листа Лист1
                         let timeSheet = workbook.worksheets.getItemOrNullObject("Лист1");
                         timeSheet.load("name");
                         await context.sync();
@@ -97,7 +97,7 @@ function newTemplate(event) {
 function regularPrices(event) {
     Office.context.ui.displayDialogAsync(
         "https://kirryya.github.io/addIn/regular-prices.html",
-         { height: 70, width: 60, displayInIframe: true }
+        { height: 75, width: 60, displayInIframe: true }
     );
 
     if (event && typeof event.completed === "function") {
@@ -115,6 +115,3 @@ function competitivePrices(event) {
         event.completed();
     }
 }
-
-
-
