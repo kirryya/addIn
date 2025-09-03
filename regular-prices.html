@@ -5,11 +5,21 @@
     <title>SmartPricing Task Pane</title>
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
     <style>
+        body {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        }
+
         #settingsModal {
             display: flex;
             align-items: flex-start;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: center;
+            row-gap: 12px;
             background: white;
             padding: 12px 20px 20px 20px;
             width: 782px;
@@ -26,7 +36,6 @@
 
         #tabs {
             display: flex;
-            margin-bottom: 16px;
             width: 100%;
             max-width: 230px;
         }
@@ -41,7 +50,6 @@
         }
 
         .tab-button.active {
-
             font-weight: 600;
             border-bottom: 2px solid #10793c;
             background: white;
@@ -123,8 +131,6 @@
             border-radius: 2px;
             padding: 6px 15px;
             border: 1px solid #D9D9D9;
-
-            margin-top: 10px;
 
             background: #ffffff;
 
@@ -420,12 +426,139 @@
 
                     <!-- Подтаб 3 -->
                     <div class="sub-tab-pane" id="kvi">
-                        <span class="subtitle">Супер KVI</span>
+                        <div class="sub-tab-container">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="kvi1" class="subtitle">Контрольный параметр цен конкурентов, %</label>
+                                <input type="text" id="kvi1" name="sheetCount" class="key_input double" autocomplete="off">
+                            </div>
+                            <div class="sub-tab-container_subtitle">
+                                <label for="kvi2" class="subtitle">Корректировка</label>
+                                <input type="text" id="kvi2" name="sheetCount" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="sub-tab-container">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="kvi3" class="subtitle">Стратегия KVI</label>
+                                <input type="text" id="kvi3" name="sheetCount" class="key_input double" autocomplete="off">
+                            </div>
+                            <div class="sub-tab-container_subtitle">
+                                <label for="kvi4" class="subtitle">Мин. рентабельность KVI, %</label>
+                                <input type="text" id="kvi4" name="sheetCount" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="sub-tab-container">
+                            <div class="sub-tab-container_subtitle">
+                                <div class="sub-tab-container_subtitle">
+                                    <label for="kvi5" class="subtitle">Предел снижения KVI</label>
+                                    <input type="text" id="kvi5" name="sheetCount" class="key_input double" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="sub-tab-container_subtitle">
+                                <div class="sub-tab-container_subtitle">
+                                    <label for="kvi6" class="subtitle">Мин. рентабельность для ЗЦ поставщиков для KVI, %</label>
+                                    <input type="text" id="kvi6" name="sheetCount" class="key_input double" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Подтаб 4 -->
                     <div class="sub-tab-pane" id="groups">
-                        <span class="subtitle">Конкурентное ЦО</span>
+                        <div class="checkbox-title">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="groupsCheckbox1">
+                                <span></span>
+                                Учитывать цены конкурентов
+                            </label>
+                        </div>
+                        <div class="checkbox-title">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="groupsCheckbox2">
+                                <span></span>
+                                Учитывать акционные цены
+                            </label>
+                        </div>
+                        <div class="checkbox-title">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="groupsCheckbox3">
+                                <span></span>
+                                Использовать конкур. эластичность
+                            </label>
+                        </div>
+                        <div class="checkbox-title">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="groupsCheckbox4">
+                                <span></span>
+                                Считать допустимое отклонение от цен конкурентов автоматически
+                            </label>
+                        </div>
+                        <div class="sub-tab-container">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="groupsInput1" class="subtitle">Контрольный параметр цен конкурентов, %</label>
+                                <input type="text" id="groupsInput1" name="sheetCount" class="key_input double" autocomplete="off">
+                            </div>
+                            <div class="sub-tab-container_subtitle">
+                                <label for="groupsInput2" class="subtitle">Срок действия цен конкурентов, в днях</label>
+                                <input type="text" id="groupsInput2" name="sheetCount" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="sub-tab-container">
+                            <label class="subtitle" style="max-width: 368px;">Метод расчета цен приоритетных конкурентов
+                                <select id="groupsSelect1" name="groupsSelect1" class="key_select" style="min-width: 368px" >
+                                    <option value="1" selected>Прямое сравнение</option>
+                                    <option value="2">Метод эталонного конкурента</option>
+                                    <option value="3">Среднерыночный уровень</option>
+                                </select>
+                            </label>
+                            <div class="sub-tab-container_subtitle">
+                                <label for="groupsInput3" class="subtitle">Персентили</label>
+                                <input type="text" id="groupsInput3" name="sheetCount" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="sub-tab-container">
+                            <div class="sub-tab-container_subtitle">
+                                <div class="sub-tab-container_subtitle">
+                                    <label for="groupsInput4" class="subtitle">Корректировка</label>
+                                    <input type="text" id="groupsInput4" name="sheetCount" class="key_input double" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="sub-tab-container_subtitle">
+                                <div class="sub-tab-container_subtitle">
+                                    <label for="groupsInput5" class="subtitle">Мин. рентабельность SKU в КЦО</label>
+                                    <input type="text" id="groupsInput5" name="sheetCount" class="key_input double" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-tab-container">
+                            <label class="subtitle" style="max-width: 368px;">Стратегия конкурентных цен
+                                <select id="methodSelect" name="groupsSelect2" class="key_select" style="min-width: 368px" >
+                                    <option value="1" selected>Стратегия «ниже рынка»</option>
+                                    <option value="2">Стратегия «на уровне рынка»</option>
+                                    <option value="3">Стратегия «выше рынка»</option>
+                                </select>
+                            </label>
+                            <div class="sub-tab-container_subtitle">
+                                <label for="groupsInput6" class="subtitle">Предел снижения КЦО</label>
+                                <input type="text" id="groupsInput6" name="sheetCount" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                        <label class="subtitle">Минимальная рентабельность для ЗЦ поставщиков для КЦО, %
+                            <input type="text" name="groupsInput7" class="key_input" style="width: 758px" autocomplete="off">
+                        </label>
+                        <div class="sub-tab-container">
+                            <div class="sub-tab-container_subtitle">
+                                <div class="sub-tab-container_subtitle">
+                                    <label for="groupsInput8" class="subtitle">Коэффициент влияния цен конкурентов</label>
+                                    <input type="text" id="groupsInput8" name="sheetCount" class="key_input double" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="sub-tab-container_subtitle">
+                                <div class="sub-tab-container_subtitle">
+                                    <label for="groupsInput9" class="subtitle">Допустимое отклонение от цен конкурентов, %</label>
+                                    <input type="text" id="groupsInput9" name="sheetCount" class="key_input double" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Подтаб 5 -->
@@ -528,6 +661,27 @@
         });
     });
 
+    document.addEventListener("DOMContentLoaded", function () {
+        const autoDeviationCheckbox = document.querySelector('input[name="groupsCheckbox4"]');
+        const deviationInput = document.getElementById("groupsInput9");
+
+        function toggleDeviation() {
+            if (autoDeviationCheckbox.checked) {
+                deviationInput.disabled = true;  // задизэйблить
+                deviationInput.classList.add("disabled");
+            } else {
+                deviationInput.disabled = false; // разблокировать
+                deviationInput.classList.remove("disabled");
+            }
+        }
+
+        // при загрузке страницы
+        toggleDeviation();
+
+        // при изменении чекбокса
+        autoDeviationCheckbox.addEventListener("change", toggleDeviation);
+    });
+
     Office.onReady(() => {
         const form = document.getElementById("settingsForm");
 
@@ -541,4 +695,3 @@
 </script>
 </body>
 </html>
-
