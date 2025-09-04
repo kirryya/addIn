@@ -23,7 +23,8 @@
             background: white;
             padding: 12px 20px 20px 20px;
             width: 782px;
-            height: calc(100vh - 50px);
+            overflow-y: auto;
+            height: calc(100vh - 42px);
         }
 
         .title {
@@ -146,10 +147,10 @@
         #settingsForm {
             display: flex;
             flex-direction: column;
-            row-gap: 12px;
+            row-gap: 16px;
             align-items: flex-start;
             width: 100%;
-            height: calc(100vh - 135px);
+            height: calc(100vh - 97px);
         }
 
         .key_input {
@@ -170,11 +171,15 @@
         }
 
         .doubleCheckbox {
-            max-width: 350px; min-width: 350px
+            max-width: 360px; min-width: 360px
         }
 
         .triple {
             max-width: 220px; min-width: 220px
+        }
+
+        .fourth {
+            max-width: 150px; min-width: 150px
         }
 
         .hidden { display: none !important; }
@@ -341,7 +346,7 @@
     <div class="tab-pane active" id="general">
         <label class="subtitle">Группа товаров
             <select id="groupSelect" name="group" class="key_select">
-                <option value="">-- выберите группу --</option>
+                <option value="all" selected>Все</option>
                 <option value="food">Продукты питания</option>
                 <option value="drinks">Напитки</option>
                 <option value="chemistry">Бытовая химия</option>
@@ -372,7 +377,7 @@
                     <!-- Подтаб 1 -->
                     <div class="sub-tab-pane active" id="license">
                         <label class="subtitle">Стратегия оптимизации цены
-                            <select id="strategySelect" name="group" class="key_select">
+                            <select id="licenseSelect1" name="licenseSelect1" class="key_select">
                                 <option value="food" selected>Максимизация валовой маржи</option>
                                 <option value="drinks">Максимизация выручки</option>
                                 <option value="chemistry">Сбалансированная</option>
@@ -380,25 +385,31 @@
                         </label>
                         <div class="checkbox-title">
                             <label class="custom-checkbox">
-                                <input type="checkbox" name="useCodes">
+                                <input type="checkbox" name="licenseCheckbox1">
                                 <span></span>
                                 Использовать вероятностный подход
                             </label>
                         </div>
                         <div class="checkbox-title">
                                 <label class="custom-checkbox">
-                                    <input type="checkbox" name="useCodes">
+                                    <input type="checkbox" name="licenseCheckbox2" data-target="#licenseInput1">
                                     <span></span>
                                     Компенсировать снижение целевых показателей
                                 </label>
                             </div>
+                        <div class="sub-tab-container">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="licenseInput1" class="subtitle">Доля Backbasket</label>
+                                <input type="text" id="licenseInput1" name="licenseInput1" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
                         <div class="checkbox-title">
                                 <label class="custom-checkbox">
-                                    <input type="checkbox" name="useCodes">
+                                    <input type="checkbox" name="licenseCheckbox3" data-target="#licenseCheckbox3">
                                     <span></span>
                                     Подбор оптимальных параметров расчета
                                 </label>
-                            </div>
+                        </div>
                         <div class="checkbox-title">
                                 <label class="custom-checkbox">
                                     <input type="checkbox" name="useCodes">
@@ -406,6 +417,16 @@
                                     Проверять на предел снижения рентабельности
                                 </label>
                             </div>
+                        <div class="sub-tab-container">
+                            <div class="sub-tab-container_subtitle" id="licenseCheckbox3">
+                                <label for="licenseInput2" class="subtitle">Прирост показателя, %</label>
+                                <input type="text" id="licenseInput2" name="licenseInput2" class="key_input double" autocomplete="off">
+                            </div>
+                            <div class="sub-tab-container_subtitle">
+                                <label for="licenseInput3" class="subtitle">Снижение кол-ва продаж, %</label>
+                                <input type="text" id="licenseInput3" name="licenseInput3" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
                         <label class="subtitle">Минимальная рентабельность SKU, %
                             <input type="text" name="sheetCount" class="key_input" style="width: 758px" autocomplete="off">
                         </label>
@@ -444,6 +465,13 @@
                                 </select>
                             </label>
                         </div>
+<!--                        <div class="checkbox-title">-->
+<!--                            <label class="custom-checkbox">-->
+<!--                                <input type="checkbox" name="licenseCheckbox5" data-target="#licenseBlock">-->
+<!--                                <span></span>-->
+<!--                                Сохранить подобранные параметры по умолчанию-->
+<!--                            </label>-->
+<!--                        </div>-->
                     </div>
 
                     <!-- Подтаб 2 -->
@@ -717,7 +745,225 @@
 
                     <!-- Подтаб 6 -->
                     <div class="sub-tab-pane" id="subcategories">
-                        <span class="subtitle">Параметры расчета</span>
+                        <div class="sub-tab-container">
+                            <div class="sub-tab-container_subtitle">
+                                <div class="sub-tab-container_subtitle">
+                                    <label for="subcategoriesInput1" class="subtitle">Глубина расчета, недель</label>
+                                    <input type="text" id="subcategoriesInput1" name="subcategoriesInput1" class="key_input double" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="sub-tab-container_subtitle">
+                                <div class="sub-tab-container_subtitle">
+                                    <label for="subcategoriesInput2" class="subtitle">Частота переоценки регулярной цены за период</label>
+                                    <input type="text" id="subcategoriesInput2" name="subcategoriesInput2" class="key_input double" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-tab-container">
+                            <div class="sub-tab-container_subtitle">
+                                <div class="sub-tab-container_subtitle">
+                                    <label for="subcategoriesInput3" class="subtitle">Допустимое отклонение закупочной цены, %</label>
+                                    <input type="text" id="subcategoriesInput3" name="subcategoriesInput3" class="key_input double" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="sub-tab-container_subtitle">
+                                <div class="sub-tab-container_subtitle">
+                                    <label for="subcategoriesInput4" class="subtitle">Допустимое отклонение КЦО, %</label>
+                                    <input type="text" id="subcategoriesInput4" name="subcategoriesInput4" class="key_input double" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-tab-container">
+                            <div class="sub-tab-container_subtitle">
+                                <div class="sub-tab-container_subtitle">
+                                    <label for="subcategoriesInput5" class="subtitle">Период для расчета прогноза продаж, дней</label>
+                                    <input type="text" id="subcategoriesInput5" name="subcategoriesInput5" class="key_input double" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="sub-tab-container_subtitle">
+                                <div class="sub-tab-container_subtitle">
+                                    <label for="subcategoriesInput6" class="subtitle">Глубина расчета закупочной цены, недель</label>
+                                    <input type="text" id="subcategoriesInput6" name="subcategoriesInput6" class="key_input double" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="checkbox-title">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="subcategoriesCheckbox1">
+                                <span></span>
+                                Считать по максимальной закупочной цене
+                            </label>
+                        </div>
+                        <div class="checkbox-title">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="categoriesCheckbox2">
+                                <span></span>
+                                Считать по будущей закупочной цене
+                            </label>
+                        </div>
+                        <div class="sub-tab-container">
+                            <div class="sub-tab-container_subtitle">
+                                <div class="sub-tab-container_subtitle">
+                                    <label for="subcategoriesInput7" class="subtitle">Период. дней</label>
+                                    <input type="text" id="subcategoriesInput7" name="subcategoriesInput7" class="key_input double" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-tab-container">
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="subcategoriesCheckbox1">
+                                    <span></span>
+                                    Учитывать все конкурентные цены
+                                </label>
+                            </div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="subcategoriesCheckbox2">
+                                    <span></span>
+                                    Считать по средневзвешенной закупочной цене
+                                </label>
+                            </div>
+                        </div>
+                        <div class="sub-tab-container">
+                            <div>
+                                <div class="checkbox-title">
+                                    <label class="custom-checkbox doubleCheckbox">
+                                        <input type="checkbox" name="subcategoriesCheckbox3">
+                                        <span></span>
+                                        Учитывать ограничение объема переоценки
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="checkbox-title">
+                                    <label class="custom-checkbox doubleCheckbox">
+                                        <input type="checkbox" name="subcategoriesCheckbox4">
+                                        <span></span>
+                                        Считать закупочную цену на уровне всего Региона
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-tab-container">
+                            <div>
+                                <div class="checkbox-title">
+                                    <label class="custom-checkbox doubleCheckbox">
+                                        <input type="checkbox" name="extraCheckbox5">
+                                        <span></span>
+                                        Фиксировать цены в промо
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="checkbox-title">
+                                    <label class="custom-checkbox doubleCheckbox">
+                                        <input type="checkbox" name="extraCheckbox6">
+                                        <span></span>
+                                        Учитывать нулевые остатки
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-tab-container" style="align-items: flex-start">
+                            <div style="display:flex; flex-direction: column">
+                                <div class="checkbox-title">
+                                    <label class="custom-checkbox doubleCheckbox">
+                                        <input type="checkbox" name="extraCheckbox7" data-target="#subcategoriesInputBlock1">
+                                        <span></span>
+                                        Изменить ценовой коридор
+                                    </label>
+                                </div>
+                                <div class="sub-tab-container" style="max-width: 360px" id="subcategoriesInputBlock1">
+                                    <div class="sub-tab-container_subtitle">
+                                        <div class="sub-tab-container_subtitle">
+                                            <label for="subcategoriesInput8" class="subtitle">Минимальная цена</label>
+                                            <input type="text" id="subcategoriesInput8" name="subcategoriesInput8" class="key_input fourth" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="sub-tab-container_subtitle">
+                                        <div class="sub-tab-container_subtitle">
+                                            <label for="subcategoriesInput9" class="subtitle">Максимальная цена</label>
+                                            <input type="text" id="subcategoriesInput9" name="subcategoriesInput9" class="key_input fourth" autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="checkbox-title">
+                                    <label class="custom-checkbox doubleCheckbox">
+                                        <input type="checkbox" name="extraCheckbox8">
+                                        <span></span>
+                                        Учитывать дату прихода
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-tab-container">
+                            <div>
+                                <div class="checkbox-title">
+                                    <label class="custom-checkbox doubleCheckbox">
+                                        <input type="checkbox" name="subcategoriesCheckbox9">
+                                        <span></span>
+                                        Фиксировать нижнюю границу
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="checkbox-title">
+                                    <label class="custom-checkbox doubleCheckbox">
+                                        <input type="checkbox" name="subcategoriesCheckbox10">
+                                        <span></span>
+                                        ЗЦ поставщиков
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-tab-container">
+                            <div>
+                                <div class="checkbox-title">
+                                    <label class="custom-checkbox doubleCheckbox">
+                                        <input type="checkbox" name="extraCheckbox11" data-target="#subcategoriesInputBlock2">
+                                        <span></span>
+                                        Показать диапазон дат
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="checkbox-title">
+                                    <label class="custom-checkbox doubleCheckbox">
+                                        <input type="checkbox" name="extraCheckbox12">
+                                        <span></span>
+                                        ЗЦ по остаткам в торговых точках и поставщиков
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-tab-container" style="max-width: 360px" id="subcategoriesInputBlock2">
+                            <div class="sub-tab-container_subtitle">
+                                <div class="sub-tab-container_subtitle">
+                                    <label for="subcategoriesInput10" class="subtitle">Дата первой продажи</label>
+                                    <input type="text" id="subcategoriesInput10" name="subcategoriesInput10" class="key_input fourth" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="sub-tab-container_subtitle">
+                                <div class="sub-tab-container_subtitle">
+                                    <label for="subcategoriesInput11" class="subtitle">Дата последней продажи</label>
+                                    <input type="text" id="subcategoriesInput11" name="subcategoriesInput11" class="key_input fourth" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-tab-container">
+                            <div>
+                                <div class="checkbox-title">
+                                    <label class="custom-checkbox doubleCheckbox">
+                                        <input type="checkbox" name="extraCheckbox13">
+                                        <span></span>
+                                        Считать цену только по SKU без учета партий
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Подтаб 7 -->
@@ -862,7 +1108,7 @@
 
 
             </div>
-        <div style="margin-left: auto; margin-top: auto;">
+        <div style="margin-left: auto; padding: 0;">
             <button type="submit">OK</button>
             <button type="button" id="close-button">Отмена</button>
         </div>
