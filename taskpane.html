@@ -19,6 +19,7 @@
             vertical-align: middle;
             width: 100%;
         }
+
         button {
             font-weight: 400;
             font-size: 18px;
@@ -37,6 +38,14 @@
             margin-top: 10px;
 
             background: #ffffff;
+
+            &:hover {
+                background: #D9D9D9;
+            }
+
+            &:active {
+                background: #ffffff;
+            }
         }
 
         #settingsForm {
@@ -167,7 +176,7 @@
         <span class="title">Общие Настройки</span>
         <form id="settingsForm">
             <label class="subtitle">Лицензионный ключ
-                <input type="text" name="sheetCount" class="key_input" required autocomplete="off">
+                <input type="text" name="sheetCount" id="licenseKey" class="key_input" required autocomplete="off">
             </label>
             <div style="display: flex; flex-direction: column; row-gap: 12px; font-weight: 400; font-size: 14px; line-height: 22px; letter-spacing: 0;">
             <span class="subtitle">Коды ОКРБ</span>
@@ -192,7 +201,7 @@
                     </label>
                 </div>
             </div>
-            <div style="margin-left: auto; max-width: 800px">
+            <div style="margin-left: auto;">
                 <button type="submit">Сохранить</button>
             </div>
         </form>
@@ -206,7 +215,7 @@
         form.onsubmit = (e) => {
             e.preventDefault();
             if (Office.context.ui && Office.context.ui.messageParent) {
-                Office.context.ui.messageParent("createSheets");
+                Office.context.ui.messageParent("closeDialog");
             }
         };
     });
