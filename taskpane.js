@@ -7,7 +7,7 @@ Office.onReady(() => {
 });
 
 function isLicenseOk() {
-    return Office.context.roamingSettings.get("licenseKey") === "1234";
+    return Office.context.document.settings.get("licenseKey");
 }
 
 function generalSettings(event) {
@@ -21,8 +21,7 @@ function generalSettings(event) {
             dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
                 if (args.message === "licenseOk") {
                     // Сохраняем ключ в Office Settings
-                    Office.context.roamingSettings.set("licenseKey", "1234");
-                    Office.context.roamingSettings.saveAsync();
+                    Office.context.document.settings.set("licenseKey", "1234");
 
                     dialog.close();
                 }
@@ -46,7 +45,7 @@ function newTemplate(event) {
 
                 dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
                     if (args.message === "licenseOk") {
-                        licenseKey = "1234";
+                        Office.context.document.settings.set("licenseKey", "1234");
                         dialog.close();
 
                         // после успешного ввода сразу открываем нужный диалог
@@ -74,8 +73,7 @@ function regularPrices(event) {
                 dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
                     if (args.message === "licenseOk") {
                         // Сохраняем ключ в Office Settings
-                        Office.context.roamingSettings.set("licenseKey", "1234");
-                        Office.context.roamingSettings.saveAsync();
+                        Office.context.document.settings.set("licenseKey", "1234");
 
                         dialog.close();
 
