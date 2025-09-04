@@ -1,9 +1,27 @@
 Office.onReady(() => {
     // Привязываем идентификаторы из манифеста к функциям
     Office.actions.associate("generalSettings", generalSettings);
-    Office.actions.associate("newTemplate", newTemplate);
-    Office.actions.associate("regularPrices", regularPrices);
     Office.actions.associate("competitivePrices", competitivePrices);
+
+    Office.actions.associate("newTemplate", (event) => {
+        const licenseKey = localStorage.getItem("licenseKey"); // или глобальная переменная
+        if (licenseKey !== "1234") {
+            alert("Введите правильный лицензионный ключ, чтобы использовать эту кнопку.");
+            if (event && event.completed) event.completed();
+            return;
+        }
+        newTemplate(event);
+    });
+
+    Office.actions.associate("regularPrices", (event) => {
+        const licenseKey = localStorage.getItem("licenseKey");
+        if (licenseKey !== "1234") {
+            alert("Введите правильный лицензионный ключ, чтобы использовать эту кнопку.");
+            if (event && event.completed) event.completed();
+            return;
+        }
+        regularPrices(event);
+    });
 
     Office.ribbon.requestUpdate({
         tabs: [
