@@ -209,15 +209,17 @@
 </div>
 
 <script>
+    window.licenseKey = "";
+
     Office.onReady(() => {
         const form = document.getElementById("settingsForm");
 
         form.onsubmit = (e) => {
             e.preventDefault();
-            const licenseKey = document.getElementById("licenseKey").value;
+            const key = document.getElementById("licenseKey").value;
 
-            if (licenseKey === "1234") {
-                localStorage.setItem("licenseKey", licenseKey);
+            if (key === "1234") {
+                window.licenseKey = key; // записываем в глобальную переменную
                 Office.context.ui.messageParent("licenseOk");
             } else {
                 alert("Введите правильный лицензионный ключ!");
