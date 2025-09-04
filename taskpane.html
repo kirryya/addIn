@@ -209,8 +209,6 @@
 </div>
 
 <script>
-    window.licenseKey = "";
-
     Office.onReady(() => {
         const form = document.getElementById("settingsForm");
 
@@ -219,7 +217,6 @@
             const key = document.getElementById("licenseKey").value;
 
             if (key === "1234") {
-                window.licenseKey = key; // записываем в глобальную переменную
                 Office.context.ui.messageParent("licenseOk");
             } else {
                 alert("Введите правильный лицензионный ключ!");
