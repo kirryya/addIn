@@ -32,8 +32,6 @@ function generalSettings(event) {
 
 function newTemplate(event) {
     if (licenseKey !== "1234") {
-        alert("Введите правильный лицензионный ключ, чтобы использовать эту кнопку.");
-        if (event && typeof event.completed === "function") event.completed();
         return;
     }
 
@@ -101,19 +99,37 @@ function newTemplate(event) {
 
 function regularPrices(event) {
     if (licenseKey !== "1234") {
-        alert("Введите правильный лицензионный ключ, чтобы использовать эту кнопку.");
-        if (event && typeof event.completed === "function") event.completed();
-        return;
+        // Ключ не введён — сначала просим пользователя ввести
+        Office.context.ui.displayDialogAsync(
+            "https://kirryya.github.io/addIn/taskpane.html",
+            { height: 44, width: 40, displayInIframe: true },
+            (asyncResult) => {
+                const dialog = asyncResult.value;
+
+                dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
+                    if (args.message === "licenseOk") {
+                        licenseKey = "1234";
+                        dialog.close();
+
+                        // после успешного ввода сразу открываем нужный диалог
+                        openRegularPricesDialog();
+                    }
+                });
+            }
+        );
+    } else {
+        openRegularPricesDialog();
     }
 
+    if (event && typeof event.completed === "function") event.completed();
+}
+
+// Фактическое открытие диалога Regular Prices
+function openRegularPricesDialog() {
     Office.context.ui.displayDialogAsync(
         "https://kirryya.github.io/addIn/regular-prices.html",
         { height: 92, width: 44, displayInIframe: true }
     );
-
-    if (event && typeof event.completed === "function") {
-        event.completed();
-    }
 }
 
 function competitivePrices(event) {
