@@ -4,12 +4,49 @@ Office.onReady(() => {
     Office.actions.associate("newTemplate", newTemplate);
     Office.actions.associate("regularPrices", regularPrices);
     Office.actions.associate("competitivePrices", competitivePrices);
+
+    const licenseInput = document.getElementById("licenseKey");
+
+    // Изначально блокируем кнопки
+    Office.actions.associate("newTemplate", () => {
+        const key = licenseInput.value;
+        if (key !== "1234") {
+            alert("Введите правильный лицензионный ключ, чтобы использовать эту кнопку.");
+            return;
+        }
+        newTemplate(); // твоя функция создания шаблонов
+    });
+
+    Office.actions.associate("competitivePrices", () => {
+        const key = licenseInput.value;
+        if (key !== "1234") {
+            alert("Введите правильный лицензионный ключ, чтобы использовать эту кнопку.");
+            return;
+        }
+        competitivePrices(); // твоя функция открытия диалога
+    });
+
+    // Можно сделать динамическое включение кнопок, если хочешь
+    licenseInput.addEventListener("input", () => {
+        const buttonsEnabled = licenseInput.value === "1234";
+        // Здесь можно менять визуально кнопки в Ribbon, если нужно
+    });
 });
 
 function generalSettings(event) {
     Office.context.ui.displayDialogAsync(
         "https://kirryya.github.io/addIn/taskpane.html",
-        {height: 40, width: 40, displayInIframe: true}
+        {height: 44, width: 40, displayInIframe: true},
+        (asyncResult) => {
+            const dialog = asyncResult.value;
+
+            // Слушаем сообщения из диалога
+            dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
+                if (args.message === "closeDialog") {
+                    dialog.close(); // закрываем окно
+                }
+            });
+        }
     );
 
     if (event && typeof event.completed === "function") {
