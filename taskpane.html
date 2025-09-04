@@ -214,8 +214,12 @@
 
         form.onsubmit = (e) => {
             e.preventDefault();
-            if (Office.context.ui && Office.context.ui.messageParent) {
+            const licenseKey = document.getElementById("licenseKey").value;
+
+            if (licenseKey === "1234") {
                 Office.context.ui.messageParent("closeDialog");
+            } else {
+                alert("Введите правильный лицензионный ключ!");
             }
         };
     });
