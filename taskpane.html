@@ -217,6 +217,7 @@
             const licenseKey = document.getElementById("licenseKey").value;
 
             if (licenseKey === "1234") {
+                localStorage.setItem("licenseKey", licenseKey);
                 Office.context.ui.messageParent("licenseOk");
             } else {
                 alert("Введите правильный лицензионный ключ!");
