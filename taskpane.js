@@ -1,5 +1,3 @@
-let licenseKey = "";
-
 Office.onReady(() => {
     // Привязываем идентификаторы из манифеста к функциям
     Office.actions.associate("generalSettings", generalSettings);
@@ -7,6 +5,10 @@ Office.onReady(() => {
     Office.actions.associate("regularPrices", regularPrices);
     Office.actions.associate("competitivePrices", competitivePrices);
 });
+
+function isLicenseOk() {
+    return Office.context.roamingSettings.get("licenseKey") === "1234";
+}
 
 function generalSettings(event) {
     Office.context.ui.displayDialogAsync(
@@ -18,7 +20,10 @@ function generalSettings(event) {
             // Слушаем сообщения из диалога
             dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
                 if (args.message === "licenseOk") {
-                    licenseKey = "1234";
+                    // Сохраняем ключ в Office Settings
+                    Office.context.roamingSettings.set("licenseKey", "1234");
+                    Office.context.roamingSettings.saveAsync();
+
                     dialog.close();
                 }
             });
@@ -31,7 +36,7 @@ function generalSettings(event) {
 }
 
 function newTemplate(event) {
-    if (licenseKey !== "1234") {
+    if (!isLicenseOk()) {
         // Ключ не введён — сначала просим пользователя ввести
         Office.context.ui.displayDialogAsync(
             "https://kirryya.github.io/addIn/taskpane.html",
@@ -58,7 +63,7 @@ function newTemplate(event) {
 }
 
 function regularPrices(event) {
-    if (licenseKey !== "1234") {
+    if (!isLicenseOk()) {
         // Ключ не введён — сначала просим пользователя ввести
         Office.context.ui.displayDialogAsync(
             "https://kirryya.github.io/addIn/taskpane.html",
@@ -68,10 +73,12 @@ function regularPrices(event) {
 
                 dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
                     if (args.message === "licenseOk") {
-                        licenseKey = "1234";
+                        // Сохраняем ключ в Office Settings
+                        Office.context.roamingSettings.set("licenseKey", "1234");
+                        Office.context.roamingSettings.saveAsync();
+
                         dialog.close();
 
-                        // после успешного ввода сразу открываем нужный диалог
                         openRegularPricesDialog();
                     }
                 });
