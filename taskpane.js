@@ -1,44 +1,9 @@
 Office.onReady(() => {
     // Привязываем идентификаторы из манифеста к функциям
     Office.actions.associate("generalSettings", generalSettings);
+    Office.actions.associate("newTemplate", newTemplate);
+    Office.actions.associate("regularPrices", regularPrices);
     Office.actions.associate("competitivePrices", competitivePrices);
-
-    Office.actions.associate("newTemplate", (event) => {
-        const licenseKey = localStorage.getItem("licenseKey"); // или глобальная переменная
-        if (licenseKey !== "1234") {
-            alert("Введите правильный лицензионный ключ, чтобы использовать эту кнопку.");
-            if (event && event.completed) event.completed();
-            return;
-        }
-        newTemplate(event);
-    });
-
-    Office.actions.associate("regularPrices", (event) => {
-        const licenseKey = localStorage.getItem("licenseKey");
-        if (licenseKey !== "1234") {
-            alert("Введите правильный лицензионный ключ, чтобы использовать эту кнопку.");
-            if (event && event.completed) event.completed();
-            return;
-        }
-        regularPrices(event);
-    });
-
-    Office.ribbon.requestUpdate({
-        tabs: [
-            {
-                id: "CustomTabSmartPricing",
-                groups: [
-                    {
-                        id: "CommandsGroup",
-                        controls: [
-                            { id: "TaskpaneButtonMain.Button2", enabled: false },
-                            { id: "TaskpaneButtonMain.Button3", enabled: false }
-                        ]
-                    }
-                ]
-            }
-        ]
-    });
 });
 
 function generalSettings(event) {
@@ -51,25 +16,8 @@ function generalSettings(event) {
             // Слушаем сообщения из диалога
             dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
                 if (args.message === "licenseOk") {
-                    dialog.close(); // закрываем окно
-
-                    // Активируем кнопки в Ribbon
-                    Office.ribbon.requestUpdate({
-                        tabs: [
-                            {
-                                id: "CustomTabSmartPricing",
-                                groups: [
-                                    {
-                                        id: "CommandsGroup",
-                                        controls: [
-                                            { id: "TaskpaneButtonMain.Button2", enabled: true },
-                                            { id: "TaskpaneButtonMain.Button3", enabled: true }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    });
+                    window.licenseKey = "1234";
+                    dialog.close();
                 }
             });
         }
@@ -81,6 +29,12 @@ function generalSettings(event) {
 }
 
 function newTemplate(event) {
+    if (window.licenseKey !== "1234") {
+        alert("Введите правильный лицензионный ключ, чтобы использовать эту кнопку.");
+        if (event && typeof event.completed === "function") event.completed();
+        return;
+    }
+
     (async () => {
         // Получаем текущее время
         let currentTime = "";
@@ -144,6 +98,12 @@ function newTemplate(event) {
 }
 
 function regularPrices(event) {
+    if (window.licenseKey !== "1234") {
+        alert("Введите правильный лицензионный ключ, чтобы использовать эту кнопку.");
+        if (event && typeof event.completed === "function") event.completed();
+        return;
+    }
+
     Office.context.ui.displayDialogAsync(
         "https://kirryya.github.io/addIn/regular-prices.html",
         { height: 92, width: 44, displayInIframe: true }
