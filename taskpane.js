@@ -84,8 +84,10 @@ function regularPrices(event) {
                 dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
                     if (args.message === "licenseOk") {
                         saveLicenseAndContinue(() => {
-                            openRegularPricesDialog();
-                            dialog.close();                           
+                            dialog.close();
+                            setTimeout(() => {
+                                openRegularPricesDialog();
+                            }, 1000);
                         });
                     }
                 });
