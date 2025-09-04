@@ -32,9 +32,66 @@ function generalSettings(event) {
 
 function newTemplate(event) {
     if (licenseKey !== "1234") {
-        return;
+        // Ключ не введён — сначала просим пользователя ввести
+        Office.context.ui.displayDialogAsync(
+            "https://kirryya.github.io/addIn/taskpane.html",
+            { height: 44, width: 40, displayInIframe: true },
+            (asyncResult) => {
+                const dialog = asyncResult.value;
+
+                dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
+                    if (args.message === "licenseOk") {
+                        licenseKey = "1234";
+                        dialog.close();
+
+                        // после успешного ввода сразу открываем нужный диалог
+                        openNewTemplate();
+                    }
+                });
+            }
+        );
+    } else {
+        openNewTemplate();
     }
 
+    if (event && typeof event.completed === "function") event.completed();
+}
+
+function regularPrices(event) {
+    if (licenseKey !== "1234") {
+        // Ключ не введён — сначала просим пользователя ввести
+        Office.context.ui.displayDialogAsync(
+            "https://kirryya.github.io/addIn/taskpane.html",
+            { height: 44, width: 40, displayInIframe: true },
+            (asyncResult) => {
+                const dialog = asyncResult.value;
+
+                dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
+                    if (args.message === "licenseOk") {
+                        licenseKey = "1234";
+                        dialog.close();
+
+                        // после успешного ввода сразу открываем нужный диалог
+                        openRegularPricesDialog();
+                    }
+                });
+            }
+        );
+    } else {
+        openRegularPricesDialog();
+    }
+
+    if (event && typeof event.completed === "function") event.completed();
+}
+
+function openRegularPricesDialog() {
+    Office.context.ui.displayDialogAsync(
+        "https://kirryya.github.io/addIn/regular-prices.html",
+        { height: 92, width: 44, displayInIframe: true }
+    );
+}
+
+function openNewTemplate () {
     (async () => {
         // Получаем текущее время
         let currentTime = "";
@@ -95,41 +152,6 @@ function newTemplate(event) {
             event.completed();
         }
     })();
-}
-
-function regularPrices(event) {
-    if (licenseKey !== "1234") {
-        // Ключ не введён — сначала просим пользователя ввести
-        Office.context.ui.displayDialogAsync(
-            "https://kirryya.github.io/addIn/taskpane.html",
-            { height: 44, width: 40, displayInIframe: true },
-            (asyncResult) => {
-                const dialog = asyncResult.value;
-
-                dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
-                    if (args.message === "licenseOk") {
-                        licenseKey = "1234";
-                        dialog.close();
-
-                        // после успешного ввода сразу открываем нужный диалог
-                        openRegularPricesDialog();
-                    }
-                });
-            }
-        );
-    } else {
-        openRegularPricesDialog();
-    }
-
-    if (event && typeof event.completed === "function") event.completed();
-}
-
-// Фактическое открытие диалога Regular Prices
-function openRegularPricesDialog() {
-    Office.context.ui.displayDialogAsync(
-        "https://kirryya.github.io/addIn/regular-prices.html",
-        { height: 92, width: 44, displayInIframe: true }
-    );
 }
 
 function competitivePrices(event) {
