@@ -1,34 +1,9 @@
 Office.onReady(() => {
-    // Привязываем идентификаторы (из манифеста) к реальной функции
+    // Привязываем идентификаторы из манифеста к функциям
     Office.actions.associate("generalSettings", generalSettings);
+    Office.actions.associate("newTemplate", newTemplate);
+    Office.actions.associate("regularPrices", regularPrices);
     Office.actions.associate("competitivePrices", competitivePrices);
-
-    const licenseInput = document.getElementById("licenseKey");
-
-    // Изначально блокируем кнопки
-    Office.actions.associate("newTemplate", () => {
-        const key = licenseInput.value;
-        if (key !== "1234") {
-            alert("Введите правильный лицензионный ключ, чтобы использовать эту кнопку.");
-            return;
-        }
-        newTemplate(); // твоя функция создания шаблонов
-    });
-
-    Office.actions.associate("regularPrices", () => {
-        const key = licenseInput.value;
-        if (key !== "1234") {
-            alert("Введите правильный лицензионный ключ, чтобы использовать эту кнопку.");
-            return;
-        }
-        regularPrices(); // твоя функция открытия диалога
-    });
-
-    // Можно сделать динамическое включение кнопок, если хочешь
-    licenseInput.addEventListener("input", () => {
-        const buttonsEnabled = licenseInput.value === "1234";
-        // Здесь можно менять визуально кнопки в Ribbon, если нужно
-    });
 });
 
 function generalSettings(event) {
@@ -40,8 +15,26 @@ function generalSettings(event) {
 
             // Слушаем сообщения из диалога
             dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
-                if (args.message === "closeDialog") {
+                if (args.message === "licenseOk") {
                     dialog.close(); // закрываем окно
+
+                    // Активируем кнопки в Ribbon
+                    Office.ribbon.requestUpdate({
+                        tabs: [
+                            {
+                                id: "CustomTabSmartPricing",
+                                groups: [
+                                    {
+                                        id: "CommandsGroup",
+                                        controls: [
+                                            { id: "TaskpaneButtonMain.Button2", enabled: true },
+                                            { id: "TaskpaneButtonMain.Button3", enabled: true } 
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    });
                 }
             });
         }
