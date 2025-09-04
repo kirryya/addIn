@@ -10,6 +10,17 @@ function isLicenseOk() {
     return Office.context.document.settings.get("licenseKey");
 }
 
+function saveLicenseAndContinue(callback) {
+    Office.context.document.settings.set("licenseKey", "1234");
+    Office.context.document.settings.saveAsync((result) => {
+        if (result.status === Office.AsyncResultStatus.Succeeded) {
+            if (callback) callback();
+        } else {
+            console.error("Ошибка сохранения ключа:", result.error);
+        }
+    });
+}
+
 function generalSettings(event) {
     Office.context.ui.displayDialogAsync(
         "https://kirryya.github.io/addIn/taskpane.html",
@@ -22,6 +33,7 @@ function generalSettings(event) {
                 if (args.message === "licenseOk") {
                     // Сохраняем ключ в Office Settings
                     Office.context.document.settings.set("licenseKey", "1234");
+                    Office.context.document.settings.saveAsync();
 
                     dialog.close();
                 }
@@ -45,11 +57,10 @@ function newTemplate(event) {
 
                 dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
                     if (args.message === "licenseOk") {
-                        Office.context.document.settings.set("licenseKey", "1234");
-                        dialog.close();
-
-                        // после успешного ввода сразу открываем нужный диалог
-                        openNewTemplate();
+                        saveLicenseAndContinue(() => {
+                            dialog.close();
+                            openNewTemplate();
+                        });
                     }
                 });
             }
@@ -72,12 +83,10 @@ function regularPrices(event) {
 
                 dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
                     if (args.message === "licenseOk") {
-                        // Сохраняем ключ в Office Settings
-                        Office.context.document.settings.set("licenseKey", "1234");
-
-                        dialog.close();
-
-                        openRegularPricesDialog();
+                        saveLicenseAndContinue(() => {
+                            dialog.close();
+                            openRegularPricesDialog();
+                        });
                     }
                 });
             }
