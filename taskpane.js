@@ -1,8 +1,6 @@
 Office.onReady(() => {
     // Привязываем идентификаторы (из манифеста) к реальной функции
     Office.actions.associate("generalSettings", generalSettings);
-    Office.actions.associate("newTemplate", newTemplate);
-    Office.actions.associate("regularPrices", regularPrices);
     Office.actions.associate("competitivePrices", competitivePrices);
 
     const licenseInput = document.getElementById("licenseKey");
@@ -17,13 +15,13 @@ Office.onReady(() => {
         newTemplate(); // твоя функция создания шаблонов
     });
 
-    Office.actions.associate("competitivePrices", () => {
+    Office.actions.associate("regularPrices", () => {
         const key = licenseInput.value;
         if (key !== "1234") {
             alert("Введите правильный лицензионный ключ, чтобы использовать эту кнопку.");
             return;
         }
-        competitivePrices(); // твоя функция открытия диалога
+        regularPrices(); // твоя функция открытия диалога
     });
 
     // Можно сделать динамическое включение кнопок, если хочешь
