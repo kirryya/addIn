@@ -1,3 +1,5 @@
+let licenseKey = "";
+
 Office.onReady(() => {
     // Привязываем идентификаторы из манифеста к функциям
     Office.actions.associate("generalSettings", generalSettings);
@@ -16,7 +18,7 @@ function generalSettings(event) {
             // Слушаем сообщения из диалога
             dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
                 if (args.message === "licenseOk") {
-                    window.licenseKey = "1234";
+                    licenseKey = "1234";
                     dialog.close();
                 }
             });
@@ -29,7 +31,7 @@ function generalSettings(event) {
 }
 
 function newTemplate(event) {
-    if (window.licenseKey !== "1234") {
+    if (licenseKey !== "1234") {
         alert("Введите правильный лицензионный ключ, чтобы использовать эту кнопку.");
         if (event && typeof event.completed === "function") event.completed();
         return;
@@ -98,7 +100,7 @@ function newTemplate(event) {
 }
 
 function regularPrices(event) {
-    if (window.licenseKey !== "1234") {
+    if (licenseKey !== "1234") {
         alert("Введите правильный лицензионный ключ, чтобы использовать эту кнопку.");
         if (event && typeof event.completed === "function") event.completed();
         return;
