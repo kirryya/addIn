@@ -4,6 +4,23 @@ Office.onReady(() => {
     Office.actions.associate("newTemplate", newTemplate);
     Office.actions.associate("regularPrices", regularPrices);
     Office.actions.associate("competitivePrices", competitivePrices);
+
+    Office.ribbon.requestUpdate({
+        tabs: [
+            {
+                id: "CustomTabSmartPricing",
+                groups: [
+                    {
+                        id: "CommandsGroup",
+                        controls: [
+                            { id: "TaskpaneButtonMain.Button2", enabled: false },
+                            { id: "TaskpaneButtonMain.Button3", enabled: false }
+                        ]
+                    }
+                ]
+            }
+        ]
+    });
 });
 
 function generalSettings(event) {
@@ -28,7 +45,7 @@ function generalSettings(event) {
                                         id: "CommandsGroup",
                                         controls: [
                                             { id: "TaskpaneButtonMain.Button2", enabled: true },
-                                            { id: "TaskpaneButtonMain.Button3", enabled: true } 
+                                            { id: "TaskpaneButtonMain.Button3", enabled: true }
                                         ]
                                     }
                                 ]
