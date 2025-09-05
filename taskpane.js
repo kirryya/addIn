@@ -134,52 +134,40 @@ function openNewTemplate () {
             timeSheet.getRange("A1").values = [[currentTime]];
 
             // Данные для других листов
-            const files = [
-                { name: "Ассортимент", path: "Template1.xlsx" },
-                { name: "Продажи", path: "Template2.xlsx" },
-                { name: "Цены конкурентов", path: "Template3.xlsx" }
+            const sheetsData = [
+                {
+                    name: "Ассортимент",
+                    values: [["Товар", "Цена", "Количество"], ["Товар1", 100, 10], ["Товар2", 200, 5]]
+                },
+                {
+                    name: "Продажи",
+                    values: [["Дата", "Товар", "Количество", "Сумма"], ["01.09.2025", "Товар1", 2, 200], ["01.09.2025", "Товар2", 1, 200]]
+                },
+                {
+                    name: "Цены конкурентов",
+                    values: [["Конкурент", "Товар", "Цена"], ["CompA", "Товар1", 105], ["CompB", "Товар2", 195]]
+                }
             ];
 
-            for (const file of files) {
-
-                // Проверяем, есть ли лист с таким именем, и удаляем его
-                const existingSheet = workbook.worksheets.getItemOrNullObject(file.name);
-                existingSheet.load("name");
-                await context.sync();
-                if (!existingSheet.isNullObject) {
-                    existingSheet.delete();
-                    await context.sync();
-                }
-
-                // Загружаем файл как ArrayBuffer
-                const response = await fetch(file.path);
-                const arrayBuffer = await response.arrayBuffer();
-
-                // Конвертируем в Base64
-                const base64 = arrayBufferToBase64(arrayBuffer);
-
-                // Добавляем лист из Base64
-                const newSheet = workbook.worksheets.addFromBase64(base64);
-                newSheet.load("name");
+            for (const sheet of sheetsData) {
+                const ws = workbook.worksheets.getItemOrNullObject(sheet.name);
+                ws.load("name");
                 await context.sync();
 
-                // Переименовываем лист, если нужно
-                newSheet.name = file.name;
+                if (!ws.isNullObject) ws.delete();
+
+                const newSheet = workbook.worksheets.add(sheet.name);
+                const range = newSheet.getRangeByIndexes(0, 0, sheet.values.length, sheet.values[0].length);
+                range.values = sheet.values;
             }
 
             await context.sync();
         });
-    })();
-}
 
-function arrayBufferToBase64(buffer) {
-    let binary = '';
-    const bytes = new Uint8Array(buffer);
-    const len = bytes.byteLength;
-    for (let i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
-    }
-    return window.btoa(binary);
+        if (event && typeof event.completed === "function") {
+            event.completed();
+        }
+    })();
 }
 
 function competitivePrices(event) {
@@ -192,4 +180,3 @@ function competitivePrices(event) {
         event.completed();
     }
 }
-
