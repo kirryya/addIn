@@ -135,9 +135,9 @@ function openNewTemplate () {
 
             // Данные для других листов
             const files = [
-                { name: "Ассортимент", path: "templates/TemplateCompetitors.xlsx" },
-                { name: "Продажи", path: "templates/TemplateLastPrices.xlsx" },
-                { name: "Цены конкурентов", path: "templates/TemplateSales_1.xlsx" }
+                { name: "Ассортимент", path: "Template1.xlsx" },
+                { name: "Продажи", path: "Template2.xlsx" },
+                { name: "Цены конкурентов", path: "Template3.xlsx" }
             ];
 
             for (const file of files) {
@@ -192,3 +192,4 @@ function competitivePrices(event) {
         event.completed();
     }
 }
+
