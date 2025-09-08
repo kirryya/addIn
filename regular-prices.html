@@ -1261,29 +1261,29 @@
             e.preventDefault();
 
             // 1. Собираем данные из формы
-            const formData = new FormData(form);
-            let payload = {};
-            for (let [key, value] of formData.entries()) {
-                payload[key] = value;
-            }
+            // const formData = new FormData(form);
+            // let payload = {};
+            // for (let [key, value] of formData.entries()) {
+            //     payload[key] = value;
+            // }
 
             // 2. Собираем данные из Excel
-            await Excel.run(async (context) => {
-                const wb = context.workbook;
-
-                const assortment = wb.worksheets.getItem("Ассортимент")
-                    .getRange("A1:C5");
-                assortment.load("values");
-
-                const sales = wb.worksheets.getItem("Продажи")
-                    .getRange("A1:D5");
-                sales.load("values");
-
-                await context.sync();
-
-                payload["assortment"] = assortment.values;
-                payload["sales"] = sales.values;
-            });
+            // await Excel.run(async (context) => {
+            //     const wb = context.workbook;
+            //
+            //     const assortment = wb.worksheets.getItem("Ассортимент")
+            //         .getRange("A1:C5");
+            //     assortment.load("values");
+            //
+            //     const sales = wb.worksheets.getItem("Продажи")
+            //         .getRange("A1:D5");
+            //     sales.load("values");
+            //
+            //     await context.sync();
+            //
+            //     payload["assortment"] = assortment.values;
+            //     payload["sales"] = sales.values;
+            // });
 
             // 3. Отправляем на сервер
             // let responseData = null;
@@ -1315,7 +1315,7 @@
 
                     await context.sync();
 
-                    // Для проверки — запишем что-то в Лист1 из вставленных
+                    // Для проверки — запишем что-то в Лист из вставленных
                     const insertedSheet = wb.worksheets.getLast();
                     insertedSheet.getRange("A1").values = [["✅ Вставлено из Response.xlsx"]];
                     await context.sync();
