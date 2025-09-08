@@ -47,6 +47,7 @@ function generalSettings(event) {
 }
 
 function newTemplate(event) {
+    console.log('click')
     if (!isLicenseOk()) {
         // Ключ не введён — сначала просим пользователя ввести
         Office.context.ui.displayDialogAsync(
