@@ -164,7 +164,6 @@ function openNewTemplate(event) {
                 // вставляем конкретный лист из файла
                 workbook.insertWorksheetsFromBase64(base64, {
                     sheetNamesToInsert: [file.sheetName], // имя листа внутри TemplateN.xlsx
-                    positionType: Excel.InsertWorksheetPositionType.end
                 });
                 await context.sync();
 
