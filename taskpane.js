@@ -128,10 +128,10 @@ function openNewTemplate(event) {
             await context.sync();
 
             if (timeSheet.isNullObject) {
-                timeSheet = workbook.worksheets.add("Лист1");
+                timeSheet = workbook.worksheets.add("Время");
             }
 
-            timeSheet.getRange("A2").values = [[currentTime]];
+            timeSheet.getRange("A1").values = [[currentTime]];
 
             // данные берём из файлов
             const files = [
