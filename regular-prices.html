@@ -1312,9 +1312,7 @@
                     const wb = context.workbook;
 
                     // Вставляем ВСЕ листы из Response.xlsx в конец текущей книги
-                    wb.insertWorksheetsFromBase64(base64, {
-                        sheetNamesToInsert: ['Результат', 'Краткий отчет', 'Детальный отчет', 'Комментарии' ],
-                    });
+                    wb.insertWorksheetsFromBase64(base64);
 
 
                     await context.sync();
@@ -1332,6 +1330,8 @@
                 console.error("Ошибка при загрузке шаблона:", err);
             }
         };
+
+
 
         closeBtn.onclick = () => {
             if (Office.context.ui && Office.context.ui.messageParent) {
