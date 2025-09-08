@@ -107,7 +107,7 @@ function openRegularPricesDialog() {
     );
 }
 
-function openNewTemplate(event) {
+function openNewTemplate (event) {
     (async () => {
         // Получаем текущее время
         let currentTime = "";
@@ -130,18 +130,17 @@ function openNewTemplate(event) {
             if (timeSheet.isNullObject) {
                 timeSheet = workbook.worksheets.add("Лист1");
             }
-
             timeSheet.getRange("A1").values = [[currentTime]];
 
-            // данные берём из файлов
+            // локальные файлы
             const files = [
-                { name: "Ассортимент", path: "https://kirryya.github.io/addIn/Template1.xlsx", sheetName: "Лист1" },
-                { name: "Продажи", path: "https://kirryya.github.io/addIn/Template2.xlsx", sheetName: "Лист1" },
-                { name: "Цены конкурентов", path: "https://kirryya.github.io/addIn/Template3.xlsx", sheetName: "Лист1" }
+                { name: "Ассортимент", path: "./Template1.xlsx", sheetName: "Лист1" },
+                { name: "Продажи", path: "./Template2.xlsx", sheetName: "Лист1" },
+                { name: "Цены конкурентов", path: "./Template3.xlsx", sheetName: "Лист1" }
             ];
 
             for (const file of files) {
-                // если лист уже есть — удаляем
+                // удаляем старый лист, если есть
                 const existing = workbook.worksheets.getItemOrNullObject(file.name);
                 existing.load("name");
                 await context.sync();
@@ -151,19 +150,19 @@ function openNewTemplate(event) {
                     await context.sync();
                 }
 
-                // загружаем xlsx
+                // загружаем локальный xlsx
                 const resp = await fetch(file.path);
                 const arrayBuffer = await resp.arrayBuffer();
                 const base64 = arrayBufferToBase64(arrayBuffer);
 
-                // вставляем конкретный лист из файла
+                // вставляем лист из файла
                 workbook.insertWorksheetsFromBase64(base64, {
-                    sheetNamesToInsert: [file.sheetName], // имя листа внутри TemplateN.xlsx
+                    sheetNamesToInsert: [file.sheetName], // имя листа в шаблоне
                     positionType: Excel.InsertWorksheetPositionType.end
                 });
                 await context.sync();
 
-                // переименовываем вставленный лист в нужное имя
+                // сразу переименовываем вставленный лист
                 const inserted = workbook.worksheets.getItem(file.sheetName);
                 inserted.name = file.name;
                 await context.sync();
@@ -176,7 +175,7 @@ function openNewTemplate(event) {
     })();
 }
 
-// вспомогательная функция
+// функция конвертации ArrayBuffer → Base64
 function arrayBufferToBase64(buffer) {
     let binary = '';
     const bytes = new Uint8Array(buffer);
@@ -187,7 +186,6 @@ function arrayBufferToBase64(buffer) {
     }
     return btoa(binary);
 }
-
 
 function competitivePrices(event) {
     Office.context.ui.displayDialogAsync(
