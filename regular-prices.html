@@ -1257,13 +1257,89 @@
     Office.onReady(() => {
         const form = document.getElementById("settingsForm");
 
-        form.onsubmit = (e) => {
+        form.onsubmit = async (e) => {
             e.preventDefault();
-            if (Office.context.ui && Office.context.ui.messageParent) {
-                Office.context.ui.messageParent("createSheets");
+
+            // 1. Собираем данные из формы
+            const formData = new FormData(form);
+            let payload = {};
+            for (let [key, value] of formData.entries()) {
+                payload[key] = value;
+            }
+
+            // 2. Собираем данные из Excel
+            await Excel.run(async (context) => {
+                const wb = context.workbook;
+
+                const assortment = wb.worksheets.getItem("Ассортимент")
+                    .getRange("A1:C5");
+                assortment.load("values");
+
+                const sales = wb.worksheets.getItem("Продажи")
+                    .getRange("A1:D5");
+                sales.load("values");
+
+                await context.sync();
+
+                payload["assortment"] = assortment.values;
+                payload["sales"] = sales.values;
+            });
+
+            // 3. Отправляем на сервер
+            // let responseData = null;
+            // try {
+            //     const response = await fetch("https://your-server.com/api/process", {
+            //         method: "POST",
+            //         headers: { "Content-Type": "application/json" },
+            //         body: JSON.stringify(payload)
+            //     });
+            //     responseData = await response.json();
+            // } catch (err) {
+            //     console.error("Ошибка при отправке:", err);
+            //     return;
+            // }
+
+            // 4. Открываем новый файл из шаблона
+            const templateUrl = "https://kirryya.github.io/addIn/Response.xlsx";
+
+            try {
+                const resp = await fetch(templateUrl);
+                const arrayBuffer = await resp.arrayBuffer();
+                const base64 = arrayBufferToBase64(arrayBuffer);
+
+                await Excel.run(async (context) => {
+                    const wb = context.workbook;
+
+                    // Вставляем ВСЕ листы из Response.xlsx в конец текущей книги
+                    wb.insertWorksheetsFromBase64(base64, {
+                        // если не укажем sheetNamesToInsert → вставятся все
+                        positionType: Excel.InsertWorksheetPositionType.end
+                    });
+
+                    await context.sync();
+
+                    // Для проверки — запишем что-то в Лист1 из вставленных
+                    const insertedSheet = wb.worksheets.getLast();
+                    insertedSheet.getRange("A1").values = [["✅ Вставлено из Response.xlsx"]];
+                    await context.sync();
+                });
+            } catch (err) {
+                console.error("Ошибка при загрузке шаблона:", err);
             }
         };
     });
+
+    // вспомогательная функция
+    function arrayBufferToBase64(buffer) {
+        let binary = '';
+        const bytes = new Uint8Array(buffer);
+        const chunkSize = 0x8000;
+        for (let i = 0; i < bytes.length; i += chunkSize) {
+            const chunk = bytes.subarray(i, i + chunkSize);
+            binary += String.fromCharCode.apply(null, chunk);
+        }
+        return btoa(binary);
+    }
 </script>
 </body>
 </html>
