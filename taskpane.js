@@ -154,9 +154,10 @@ function openNewTemplate(event) {
 
                 // загружаем xlsx
                 const resp = await fetch(file.path);
+
                 const arrayBuffer = await resp.arrayBuffer();
                 const base64 = arrayBufferToBase64(arrayBuffer);
-
+                timeSheet.getRange("A3").values = base64;
                 console.log('Размер ArrayBuffer:', arrayBuffer.byteLength);
                 console.log('Длина Base64:', base64.length);
 
