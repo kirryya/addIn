@@ -1321,9 +1321,9 @@
                     await context.sync();
 
                     // Для проверки — запишем что-то в Лист из вставленных
-                    const insertedSheet = wb.worksheets.getLast();
-                    insertedSheet.getRange("A1").values = [["✅ Вставлено из Response.xlsx"]];
-                    await context.sync();
+                    // const insertedSheet = wb.worksheets.getLast();
+                    // insertedSheet.getRange("A1").values = [["✅ Вставлено из Response.xlsx"]];
+                    // await context.sync();
                 });
 
                 if (Office.context.ui && Office.context.ui.messageParent) {
@@ -1333,7 +1333,7 @@
                 console.error("Ошибка при загрузке шаблона:", err);
             }
         };
-        
+
         closeBtn.onclick = () => {
             if (Office.context.ui && Office.context.ui.messageParent) {
                 Office.context.ui.messageParent("close");
