@@ -1311,7 +1311,11 @@
                     const wb = context.workbook;
 
                     // Вставляем ВСЕ листы из Response.xlsx в конец текущей книги
-                    wb.insertWorksheetsFromBase64(base64);
+                    wb.insertWorksheetsFromBase64(base64, {
+                        sheetNamesToInsert: [],
+                        positionType: Excel.WorksheetPositionType.end,
+                    });
+
 
                     await context.sync();
 
