@@ -156,6 +156,9 @@ function openNewTemplate(event) {
                 const arrayBuffer = await resp.arrayBuffer();
                 const base64 = arrayBufferToBase64(arrayBuffer);
 
+                console.log('Размер ArrayBuffer:', arrayBuffer.byteLength);
+                console.log('Длина Base64:', base64.length);
+
                 // вставляем конкретный лист из файла
                 workbook.insertWorksheetsFromBase64(base64, {
                     sheetNamesToInsert: [file.sheetName], // имя листа внутри TemplateN.xlsx
