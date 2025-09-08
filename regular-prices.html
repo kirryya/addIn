@@ -1256,6 +1256,7 @@
 
     Office.onReady(() => {
         const form = document.getElementById("settingsForm");
+        const closeBtn = document.getElementById("close-button");
 
         form.onsubmit = async (e) => {
             e.preventDefault();
@@ -1330,6 +1331,12 @@
                 }
             } catch (err) {
                 console.error("Ошибка при загрузке шаблона:", err);
+            }
+        };
+        
+        closeBtn.onclick = () => {
+            if (Office.context.ui && Office.context.ui.messageParent) {
+                Office.context.ui.messageParent("close");
             }
         };
     });
