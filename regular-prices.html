@@ -1313,8 +1313,7 @@
 
                     // Вставляем ВСЕ листы из Response.xlsx в конец текущей книги
                     wb.insertWorksheetsFromBase64(base64, {
-                        sheetNamesToInsert: [],
-                        positionType: Excel.WorksheetPositionType.end,
+                        sheetNamesToInsert: ['Результат', 'Краткий отчет', 'Детальный отчет', 'Комментарии' ],
                     });
 
 
