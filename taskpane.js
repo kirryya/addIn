@@ -147,6 +147,8 @@ function openNewTemplate () {
                 existingSheet.load("name");
                 await context.sync();
                 if (!existingSheet.isNullObject) {
+                    // если удаляем активный лист, Excel может ругнуться → переключаемся на первый
+                    workbook.worksheets.getFirst().activate();
                     existingSheet.delete();
                     await context.sync();
                 }
@@ -158,16 +160,18 @@ function openNewTemplate () {
                 // Конвертируем в Base64
                 const base64 = arrayBufferToBase64(arrayBuffer);
 
-                // Добавляем лист из Base64
-                const newSheet = workbook.worksheets.addFromBase64(base64);
-                newSheet.load("name");
+                // Вставляем только один конкретный лист из шаблона
+                workbook.insertWorksheetsFromBase64(base64, {
+                    sheetNamesToInsert: ["Лист1"], // ⚠️ имя листа внутри TemplateN.xlsx
+                    positionType: Excel.InsertWorksheetPositionType.end
+                });
                 await context.sync();
 
-                // Переименовываем лист, если нужно
-                newSheet.name = file.name;
+                // Получаем вставленный лист и переименовываем его
+                const insertedSheet = workbook.worksheets.getItem("Лист1");
+                insertedSheet.name = file.name;
+                await context.sync();
             }
-
-            await context.sync();
         });
     })();
 }
@@ -175,11 +179,12 @@ function openNewTemplate () {
 function arrayBufferToBase64(buffer) {
     let binary = '';
     const bytes = new Uint8Array(buffer);
-    const len = bytes.byteLength;
-    for (let i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
+    const chunkSize = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+        const chunk = bytes.subarray(i, i + chunkSize);
+        binary += String.fromCharCode.apply(null, chunk);
     }
-    return window.btoa(binary);
+    return btoa(binary);
 }
 
 function competitivePrices(event) {
