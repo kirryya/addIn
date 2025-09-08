@@ -124,7 +124,7 @@ function openNewTemplate(event) {
             const workbook = context.workbook;
 
             // Лист1 с временем
-            let timeSheet = workbook.worksheets.getItemOrNullObject("Лист1");
+            let timeSheet = workbook.worksheets.getItemOrNullObject("Время");
             timeSheet.load("name");
             await context.sync();
 
@@ -132,12 +132,12 @@ function openNewTemplate(event) {
                 timeSheet = workbook.worksheets.add("Время");
             }
 
-            timeSheet.getRange("B1").values = [[currentTime]];
+            timeSheet.getRange("A1").values = [[currentTime]];
 
             // данные берём из файлов
             const files = [
-                { name: "Ассортимент", path: "https://kirryya.github.io/addIn/Template1.xlsx", sheetName: "Ассортимент" },
-                { name: "Продажи", path: "https://kirryya.github.io/addIn/Template2.xlsx", sheetName: "Продажи" },
+                { name: "Продажи", path: "https://kirryya.github.io/addIn/Template1.xlsx", sheetName: "Продажи" },
+                { name: "Ассортимент", path: "https://kirryya.github.io/addIn/Template2.xlsx", sheetName: "Ассортимент" },
                 { name: "Цены конкурентов", path: "https://kirryya.github.io/addIn/Template3.xlsx", sheetName: "Цены конкурентов" }
             ];
 
@@ -163,6 +163,8 @@ function openNewTemplate(event) {
                 });
                 await context.sync();
             }
+
+            await context.sync();
         });
 
         if (event && typeof event.completed === "function") {
