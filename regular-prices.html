@@ -1261,48 +1261,92 @@
         form.onsubmit = async (e) => {
             e.preventDefault();
 
-            // 1. Собираем данные из формы
-            // const formData = new FormData(form);
-            // let payload = {};
-            // for (let [key, value] of formData.entries()) {
-            //     payload[key] = value;
-            // }
+            // 1. Собираем данные формы
+            const formData = new FormData(form);
+            let payload = {};
+            for (let [key, value] of formData.entries()) {
+                payload[key] = value;
+            }
 
-            // 2. Собираем данные из Excel
-            // await Excel.run(async (context) => {
-            //     const wb = context.workbook;
-            //
-            //     const assortment = wb.worksheets.getItem("Ассортимент")
-            //         .getRange("A1:C5");
-            //     assortment.load("values");
-            //
-            //     const sales = wb.worksheets.getItem("Продажи")
-            //         .getRange("A1:D5");
-            //     sales.load("values");
-            //
-            //     await context.sync();
-            //
-            //     payload["assortment"] = assortment.values;
-            //     payload["sales"] = sales.values;
-            // });
+            // 2. Собираем данные из Excel и готовим файлы
+            const sheetNames = ["Ассортимент", "Продажи", "Цены конкурентов"];
+            let filesToSend = [];
 
-            // 3. Отправляем на сервер
-            // let responseData = null;
-            // try {
-            //     const response = await fetch("https://your-server.com/api/process", {
-            //         method: "POST",
-            //         headers: { "Content-Type": "application/json" },
-            //         body: JSON.stringify(payload)
-            //     });
-            //     responseData = await response.json();
-            // } catch (err) {
-            //     console.error("Ошибка при отправке:", err);
-            //     return;
-            // }
+            for (const sheetName of sheetNames) {
+                await Excel.run(async (context) => {
+                    const wb = context.workbook;
+                    const sheet = wb.worksheets.getItem(sheetName);
+                    sheet.load("name");
+                    await context.sync();
 
-            // 4. Открываем новый файл из шаблона
+                    // Берем значения листа
+                    const range = sheet.getUsedRange();
+                    range.load("values");
+                    await context.sync();
+
+                    // Сохраняем данные в payload (например для JSON)
+                    payload[sheetName] = range.values;
+
+                    // Создаём временную книгу с одним листом
+                    const tempWb = context.application.createWorkbook();
+                    sheet.copy(Excel.WorksheetPositionType.end, tempWb.worksheets.getFirst());
+                    await context.sync();
+
+                    // Получаем Base64 временной книги
+                    const base64 = await new Promise((resolve, reject) => {
+                        tempWb.getFileAsync(
+                            Office.FileType.Compressed,
+                            { sliceSize: 65536 },
+                            function (result) {
+                                if (result.status === Office.AsyncResultStatus.Succeeded) {
+                                    const file = result.value;
+                                    const slices = [];
+                                    let sliceIndex = 0;
+
+                                    function getSlice() {
+                                        file.getSliceAsync(sliceIndex, function (sliceResult) {
+                                            if (sliceResult.status === Office.AsyncResultStatus.Succeeded) {
+                                                slices.push(sliceResult.value.data);
+                                                sliceIndex++;
+                                                if (sliceIndex < file.sliceCount) {
+                                                    getSlice();
+                                                } else {
+                                                    file.closeAsync();
+                                                    resolve(slices.join(""));
+                                                }
+                                            } else {
+                                                reject(sliceResult.error);
+                                            }
+                                        });
+                                    }
+
+                                    getSlice();
+                                } else {
+                                    reject(result.error);
+                                }
+                            }
+                        );
+                    });
+
+                    filesToSend.push({ name: `${sheetName}.xlsx`, base64 });
+                });
+            }
+
+            // 3. Отправляем форму и файлы на сервер
+            try {
+                await fetch("https://your-server.com/api/process", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ formData: payload, files: filesToSend })
+                });
+                console.log("Форма и файлы отправлены");
+            } catch (err) {
+                console.error("Ошибка при отправке:", err);
+                return;
+            }
+
+            // 4. Вставляем шаблон Response.xlsx в текущую книгу
             const templateUrl = "https://kirryya.github.io/addIn/Response.xlsx";
-
             try {
                 const resp = await fetch(templateUrl);
                 const arrayBuffer = await resp.arrayBuffer();
@@ -1310,19 +1354,14 @@
 
                 await Excel.run(async (context) => {
                     const wb = context.workbook;
-
-                    // Вставляем ВСЕ листы из Response.xlsx в конец текущей книги
-                    wb.insertWorksheetsFromBase64(base64);
-
-
+                    wb.insertWorksheetsFromBase64(base64, {
+                        sheetNamesToInsert: [], // все листы
+                        positionType: Excel.WorksheetPositionType.end
+                    });
                     await context.sync();
-
-                    // Для проверки — запишем что-то в Лист из вставленных
-                    // const insertedSheet = wb.worksheets.getLast();
-                    // insertedSheet.getRange("A1").values = [["✅ Вставлено из Response.xlsx"]];
-                    // await context.sync();
                 });
 
+                // Закрываем окно диалога
                 if (Office.context.ui && Office.context.ui.messageParent) {
                     Office.context.ui.messageParent("close");
                 }
@@ -1331,8 +1370,6 @@
             }
         };
 
-
-
         closeBtn.onclick = () => {
             if (Office.context.ui && Office.context.ui.messageParent) {
                 Office.context.ui.messageParent("close");
@@ -1340,7 +1377,7 @@
         };
     });
 
-    // вспомогательная функция
+    // Вспомогательная функция
     function arrayBufferToBase64(buffer) {
         let binary = '';
         const bytes = new Uint8Array(buffer);
@@ -1351,6 +1388,7 @@
         }
         return btoa(binary);
     }
+
 </script>
 </body>
 </html>
