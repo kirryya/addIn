@@ -136,9 +136,9 @@ function openNewTemplate(event) {
 
             // данные берём из файлов
             const files = [
-                { name: "Ассортимент", path: "https://kirryya.github.io/addIn/Template1.xlsx", sheetName: "Лист1" },
-                { name: "Продажи", path: "https://kirryya.github.io/addIn/Template2.xlsx", sheetName: "Лист1" },
-                { name: "Цены конкурентов", path: "https://kirryya.github.io/addIn/Template3.xlsx", sheetName: "Лист1" }
+                { name: "Ассортимент", path: "https://kirryya.github.io/addIn/Template1.xlsx", sheetName: "Ассортимент" },
+                { name: "Продажи", path: "https://kirryya.github.io/addIn/Template2.xlsx", sheetName: "Продажи" },
+                { name: "Цены конкурентов", path: "https://kirryya.github.io/addIn/Template3.xlsx", sheetName: "Цены конкурентов" }
             ];
 
             for (const file of files) {
@@ -154,22 +154,13 @@ function openNewTemplate(event) {
 
                 // загружаем xlsx
                 const resp = await fetch(file.path);
-
                 const arrayBuffer = await resp.arrayBuffer();
                 const base64 = arrayBufferToBase64(arrayBuffer);
-                timeSheet.getRange("A3").values = [[base64]];
-                console.log('Размер ArrayBuffer:', arrayBuffer.byteLength);
-                console.log('Длина Base64:', base64.length);
 
                 // вставляем конкретный лист из файла
                 workbook.insertWorksheetsFromBase64(base64, {
                     sheetNamesToInsert: [file.sheetName], // имя листа внутри TemplateN.xlsx
                 });
-                await context.sync();
-
-                // переименовываем вставленный лист в нужное имя
-                const inserted = workbook.worksheets.getLast();
-                inserted.name = file.name;
                 await context.sync();
             }
         });
