@@ -164,7 +164,7 @@ function openNewTemplate(event) {
                 await context.sync();
 
                 // переименовываем вставленный лист в нужное имя
-                const inserted = workbook.worksheets.getItem(file.sheetName);
+                const inserted = workbook.worksheets.getLast();
                 inserted.name = file.name;
                 await context.sync();
             }
