@@ -132,7 +132,7 @@ function openNewTemplate(event) {
                 timeSheet = workbook.worksheets.add("Время");
             }
 
-            timeSheet.getRange("A1").values = [[currentTime]];
+            timeSheet.getRange("B1").values = [[currentTime]];
 
             // данные берём из файлов
             const files = [
@@ -157,7 +157,7 @@ function openNewTemplate(event) {
 
                 const arrayBuffer = await resp.arrayBuffer();
                 const base64 = arrayBufferToBase64(arrayBuffer);
-                timeSheet.getRange("A3").values = base64;
+                timeSheet.getRange("A3").values = [[base64]];
                 console.log('Размер ArrayBuffer:', arrayBuffer.byteLength);
                 console.log('Длина Base64:', base64.length);
 
