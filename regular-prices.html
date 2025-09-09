@@ -1308,9 +1308,7 @@
 
             await Excel.run(async (context) => {
                 const wb = context.workbook;
-                wb.insertWorksheetsFromBase64(base64, {
-                    positionType: Excel.WorksheetPositionType.end
-                });
+                wb.insertWorksheetsFromBase64(base64);
                 await context.sync();
             });
 
