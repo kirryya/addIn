@@ -1274,25 +1274,37 @@
                 const wb = context.workbook;
 
                 for (const sheetName of sheetNames) {
-                    const sheet = wb.worksheets.getItem(sheetName);
-                    const range = sheet.getUsedRange();
-                    range.load("values");
+                    const sheet = wb.worksheets.getItemOrNullObject(sheetName);
+                    sheet.load("name");
                     await context.sync();
 
-                    const values = range.values;
-                    payload[sheetName] = values;
+                    if (!sheet.isNullObject) {
+                        const range = sheet.getUsedRange();
+                        range.load("values");
+                        await context.sync();
 
-                    // Создаем новую книгу через SheetJS
-                    const ws = XLSX.utils.aoa_to_sheet(values);
-                    const newWb = XLSX.utils.book_new();
-                    XLSX.utils.book_append_sheet(newWb, ws, sheetName);
+                        const values = range.values;
+                        payload[sheetName] = values;
 
-                    // Конвертируем в base64
-                    const base64 = XLSX.write(newWb, { bookType: "xlsx", type: "base64" });
-
-                    filesToSend.push({ name: `${sheetName}.xlsx`, base64 });
+                        filesToSend.push({ sheetName, values });
+                    } else {
+                        console.warn(`Лист ${sheetName} не найден`);
+                    }
                 }
             });
+
+            for (const file of filesToSend) {
+                const ws = XLSX.utils.aoa_to_sheet(file.values);
+                const newWb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(newWb, ws, file.sheetName);
+
+                const base64 = XLSX.write(newWb, { bookType: "xlsx", type: "base64" });
+                file.base64 = base64;
+            }
+
+            // Теперь можно отправлять payload + файлы на сервер
+            console.log("payload:", payload);
+            console.log("filesToSend:", filesToSend);
 
             // 3. Отправляем форму и файлы на сервер
             await fetch("https://your-server.com/api/process", {
