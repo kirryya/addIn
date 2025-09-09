@@ -1276,7 +1276,6 @@
                 for (const sheetName of sheetNames) {
                     const sheet = wb.worksheets.getItemOrNullObject(sheetName);
                     sheet.load("name");
-                    await context.sync();
 
                     if (!sheet.isNullObject) {
                         const range = sheet.getUsedRange();
@@ -1307,11 +1306,37 @@
             console.log("filesToSend:", filesToSend);
 
             // 3. Отправляем форму и файлы на сервер
-            await fetch("https://your-server.com/api/process", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ formData: payload, files: filesToSend })
-            });
+            try {
+                const formDataToSend = new FormData();
+
+                // добавляем поля из формы
+                for (const key in payload) {
+                    formDataToSend.append(key, JSON.stringify(payload[key]));
+                }
+
+                // добавляем файлы
+                filesToSend.forEach(file => {
+                    const byteString = atob(file.base64);
+                    const ab = new ArrayBuffer(byteString.length);
+                    const ia = new Uint8Array(ab);
+                    for (let i = 0; i < byteString.length; i++) {
+                        ia[i] = byteString.charCodeAt(i);
+                    }
+                    const blob = new Blob([ab], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                    formDataToSend.append("files[]", blob, `${file.sheetName}.xlsx`);
+                });
+
+                const response = await fetch("https://your-server.com/api/process", {
+                    method: "POST",
+                    body: formDataToSend
+                });
+
+                const result = await response.json();
+                console.log("Ответ сервера:", result);
+            } catch (err) {
+                console.error("Ошибка при отправке:", err);
+            }
+
 
             // 4. Вставляем шаблон Response.xlsx в текущую книгу
             const resp = await fetch("https://kirryya.github.io/addIn/Response.xlsx");
