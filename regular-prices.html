@@ -1274,21 +1274,26 @@
                 const wb = context.workbook;
 
                 for (const sheetName of sheetNames) {
-                    const sheet = wb.worksheets.getItemOrNullObject(sheetName);
-                    sheet.load("name,isNullObject");
-                    await context.sync();
-
-                    if (!sheet.isNullObject) {
-                        const range = sheet.getUsedRange();
-                        range.load("values");
+                    let sheet;
+                    try {
+                        sheet = wb.worksheets.getItemOrNullObject(sheetName);
+                        sheet.load("name,isNullObject");
                         await context.sync();
 
-                        const values = range.values;
-                        payload[sheetName] = values;
+                        if (!sheet.isNullObject) {
+                            const range = sheet.getUsedRange();
+                            range.load("values");
+                            await context.sync();
 
-                        filesToSend.push({ sheetName, values });
-                    } else {
-                        console.warn(`Лист ${sheetName} не найден`);
+                            const values = range.values;
+                            payload[sheetName] = values;
+
+                            filesToSend.push({ sheetName, values });
+                        } else {
+                            console.warn(`Лист ${sheetName} не найден`);
+                        }
+                    } catch (err) {
+                        console.error(`Ошибка при обработке листа ${sheetName}:`, err);
                     }
                 }
             });
