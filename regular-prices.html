@@ -1273,25 +1273,25 @@
             await Excel.run(async (context) => {
                 const wb = context.workbook;
 
+                wb.worksheets.load("items/name");
+                await context.sync();
+
                 for (const sheetName of sheetNames) {
-                    let sheet;
+                    const sheetExists = wb.worksheets.items.find(s => s.name === sheetName);
+
+                    if (!sheetExists) {
+                        console.warn(`Лист ${sheetName} не найден`);
+                        continue;
+                    }
+
                     try {
-                        sheet = wb.worksheets.getItemOrNullObject(sheetName);
-                        sheet.load("name,isNullObject");
+                        const range = sheetExists.getUsedRange();
+                        range.load("values");
                         await context.sync();
 
-                        if (!sheet.isNullObject) {
-                            const range = sheet.getUsedRange();
-                            range.load("values");
-                            await context.sync();
-
-                            const values = range.values;
-                            payload[sheetName] = values;
-
-                            filesToSend.push({ sheetName, values });
-                        } else {
-                            console.warn(`Лист ${sheetName} не найден`);
-                        }
+                        const values = range.values;
+                        payload[sheetName] = values;
+                        filesToSend.push({ sheetName, values });
                     } catch (err) {
                         console.error(`Ошибка при обработке листа ${sheetName}:`, err);
                     }
