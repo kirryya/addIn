@@ -1275,7 +1275,8 @@
 
                 for (const sheetName of sheetNames) {
                     const sheet = wb.worksheets.getItemOrNullObject(sheetName);
-                    sheet.load("name");
+                    sheet.load("name,isNullObject");
+                    await context.sync();
 
                     if (!sheet.isNullObject) {
                         const range = sheet.getUsedRange();
