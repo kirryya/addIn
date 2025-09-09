@@ -1264,109 +1264,58 @@
             // 1. Собираем данные формы
             const formData = new FormData(form);
             let payload = {};
-            for (let [key, value] of formData.entries()) {
-                payload[key] = value;
-            }
+            for (let [k, v] of formData.entries()) payload[k] = v;
 
             // 2. Собираем данные из Excel и готовим файлы
             const sheetNames = ["Ассортимент", "Продажи", "Цены конкурентов"];
             let filesToSend = [];
 
-            for (const sheetName of sheetNames) {
-                await Excel.run(async (context) => {
-                    const wb = context.workbook;
-                    const sheet = wb.worksheets.getItem(sheetName);
-                    sheet.load("name");
-                    await context.sync();
+            await Excel.run(async (context) => {
+                const wb = context.workbook;
 
-                    // Берем значения листа
+                for (const sheetName of sheetNames) {
+                    const sheet = wb.worksheets.getItem(sheetName);
                     const range = sheet.getUsedRange();
                     range.load("values");
                     await context.sync();
 
-                    // Сохраняем данные в payload (например для JSON)
-                    payload[sheetName] = range.values;
+                    const values = range.values;
+                    payload[sheetName] = values;
 
-                    // Создаём временную книгу с одним листом
-                    const tempWb = context.application.createWorkbook();
-                    sheet.copy(Excel.WorksheetPositionType.end, tempWb.worksheets.getFirst());
-                    await context.sync();
+                    // Создаем новую книгу через SheetJS
+                    const ws = XLSX.utils.aoa_to_sheet(values);
+                    const newWb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(newWb, ws, sheetName);
 
-                    // Получаем Base64 временной книги
-                    const base64 = await new Promise((resolve, reject) => {
-                        tempWb.getFileAsync(
-                            Office.FileType.Compressed,
-                            { sliceSize: 65536 },
-                            function (result) {
-                                if (result.status === Office.AsyncResultStatus.Succeeded) {
-                                    const file = result.value;
-                                    const slices = [];
-                                    let sliceIndex = 0;
-
-                                    function getSlice() {
-                                        file.getSliceAsync(sliceIndex, function (sliceResult) {
-                                            if (sliceResult.status === Office.AsyncResultStatus.Succeeded) {
-                                                slices.push(sliceResult.value.data);
-                                                sliceIndex++;
-                                                if (sliceIndex < file.sliceCount) {
-                                                    getSlice();
-                                                } else {
-                                                    file.closeAsync();
-                                                    resolve(slices.join(""));
-                                                }
-                                            } else {
-                                                reject(sliceResult.error);
-                                            }
-                                        });
-                                    }
-
-                                    getSlice();
-                                } else {
-                                    reject(result.error);
-                                }
-                            }
-                        );
-                    });
+                    // Конвертируем в base64
+                    const base64 = XLSX.write(newWb, { bookType: "xlsx", type: "base64" });
 
                     filesToSend.push({ name: `${sheetName}.xlsx`, base64 });
-                });
-            }
+                }
+            });
 
             // 3. Отправляем форму и файлы на сервер
-            try {
-                await fetch("https://your-server.com/api/process", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ formData: payload, files: filesToSend })
-                });
-                console.log("Форма и файлы отправлены");
-            } catch (err) {
-                console.error("Ошибка при отправке:", err);
-                return;
-            }
+            await fetch("https://your-server.com/api/process", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ formData: payload, files: filesToSend })
+            });
 
             // 4. Вставляем шаблон Response.xlsx в текущую книгу
-            const templateUrl = "https://kirryya.github.io/addIn/Response.xlsx";
-            try {
-                const resp = await fetch(templateUrl);
-                const arrayBuffer = await resp.arrayBuffer();
-                const base64 = arrayBufferToBase64(arrayBuffer);
+            const resp = await fetch("https://kirryya.github.io/addIn/Response.xlsx");
+            const arrayBuffer = await resp.arrayBuffer();
+            const base64 = arrayBufferToBase64(arrayBuffer);
 
-                await Excel.run(async (context) => {
-                    const wb = context.workbook;
-                    wb.insertWorksheetsFromBase64(base64, {
-                        sheetNamesToInsert: [], // все листы
-                        positionType: Excel.WorksheetPositionType.end
-                    });
-                    await context.sync();
+            await Excel.run(async (context) => {
+                const wb = context.workbook;
+                wb.insertWorksheetsFromBase64(base64, {
+                    positionType: Excel.WorksheetPositionType.end
                 });
+                await context.sync();
+            });
 
-                // Закрываем окно диалога
-                if (Office.context.ui && Office.context.ui.messageParent) {
-                    Office.context.ui.messageParent("close");
-                }
-            } catch (err) {
-                console.error("Ошибка при загрузке шаблона:", err);
+            if (Office.context.ui && Office.context.ui.messageParent) {
+                Office.context.ui.messageParent("close");
             }
         };
 
@@ -1379,12 +1328,11 @@
 
     // Вспомогательная функция
     function arrayBufferToBase64(buffer) {
-        let binary = '';
+        let binary = "";
         const bytes = new Uint8Array(buffer);
         const chunkSize = 0x8000;
         for (let i = 0; i < bytes.length; i += chunkSize) {
-            const chunk = bytes.subarray(i, i + chunkSize);
-            binary += String.fromCharCode.apply(null, chunk);
+            binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
         }
         return btoa(binary);
     }
