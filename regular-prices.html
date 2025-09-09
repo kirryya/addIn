@@ -1266,68 +1266,60 @@
             let payload = {};
             for (let [k, v] of formData.entries()) payload[k] = v;
 
-            // 2. Собираем данные из Excel и готовим файлы
+            // 2. Сначала получаем список доступных листов
+            let sheetsInfo = [];
+            await Excel.run(async context => {
+                const sheets = context.workbook.worksheets;
+                sheets.load("items/name");
+                await context.sync();
+                sheetsInfo = sheets.items.map(s => s.name);
+            });
+
+            // 3. Обрабатываем нужные листы
             const sheetNames = ["Ассортимент", "Продажи", "Цены конкурентов"];
             let filesToSend = [];
 
-            await Excel.run(async (context) => {
-                const wb = context.workbook;
+            for (const sheetName of sheetNames) {
+                if (!sheetsInfo.includes(sheetName)) {
+                    console.warn(`Лист ${sheetName} не найден`);
+                    continue;
+                }
 
-                for (const sheetName of sheetNames) {
-                    let sheet;
+                await Excel.run(async context => {
                     try {
-                        sheet = wb.worksheets.getItemOrNullObject(sheetName);
-                        sheet.load("name,isNullObject");
+                        const sheet = context.workbook.worksheets.getItem(sheetName);
+                        const range = sheet.getUsedRange();
+                        range.load("values");
                         await context.sync();
 
-                        if (!sheet.isNullObject) {
-                            const range = sheet.getUsedRange();
-                            range.load("values");
-                            await context.sync();
-
-                            const values = range.values;
-                            payload[sheetName] = values;
-
-                            filesToSend.push({ sheetName, values });
-                        } else {
-                            console.warn(`Лист ${sheetName} не найден`);
-                        }
+                        const values = range.values;
+                        payload[sheetName] = values;
+                        filesToSend.push({ sheetName, values });
                     } catch (err) {
                         console.error(`Ошибка при обработке листа ${sheetName}:`, err);
                     }
-                }
-            });
+                });
+            }
 
+            // 4. Конвертируем данные в XLSX файлы через SheetJS
             for (const file of filesToSend) {
                 const ws = XLSX.utils.aoa_to_sheet(file.values);
                 const newWb = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(newWb, ws, file.sheetName);
-
-                const base64 = XLSX.write(newWb, { bookType: "xlsx", type: "base64" });
-                file.base64 = base64;
+                file.base64 = XLSX.write(newWb, { bookType: "xlsx", type: "base64" });
             }
 
-            // Теперь можно отправлять payload + файлы на сервер
-            console.log("payload:", payload);
-            console.log("filesToSend:", filesToSend);
-
-            // 3. Отправляем форму и файлы на сервер
+            // 5. Отправляем payload + файлы на сервер
             try {
                 const formDataToSend = new FormData();
 
-                // добавляем поля из формы
-                for (const key in payload) {
-                    formDataToSend.append(key, JSON.stringify(payload[key]));
-                }
+                for (const key in payload) formDataToSend.append(key, JSON.stringify(payload[key]));
 
-                // добавляем файлы
                 filesToSend.forEach(file => {
                     const byteString = atob(file.base64);
                     const ab = new ArrayBuffer(byteString.length);
                     const ia = new Uint8Array(ab);
-                    for (let i = 0; i < byteString.length; i++) {
-                        ia[i] = byteString.charCodeAt(i);
-                    }
+                    for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
                     const blob = new Blob([ab], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
                     formDataToSend.append("files[]", blob, `${file.sheetName}.xlsx`);
                 });
@@ -1343,41 +1335,40 @@
                 console.error("Ошибка при отправке:", err);
             }
 
+            // 6. Вставляем шаблон Response.xlsx
+            try {
+                const resp = await fetch("https://kirryya.github.io/addIn/Response.xlsx");
+                const arrayBuffer = await resp.arrayBuffer();
+                const base64 = arrayBufferToBase64(arrayBuffer);
 
-            // 4. Вставляем шаблон Response.xlsx в текущую книгу
-            const resp = await fetch("https://kirryya.github.io/addIn/Response.xlsx");
-            const arrayBuffer = await resp.arrayBuffer();
-            const base64 = arrayBufferToBase64(arrayBuffer);
-
-            await Excel.run(async (context) => {
-                const wb = context.workbook;
-                wb.insertWorksheetsFromBase64(base64);
-                await context.sync();
-            });
-
-            if (Office.context.ui && Office.context.ui.messageParent) {
-                Office.context.ui.messageParent("close");
+                await Excel.run(async context => {
+                    context.workbook.insertWorksheetsFromBase64(base64);
+                    await context.sync();
+                });
+            } catch (err) {
+                console.error("Ошибка при вставке шаблона:", err);
             }
+
+            // 7. Закрываем диалог
+            if (Office.context.ui?.messageParent) Office.context.ui.messageParent("close");
         };
 
         closeBtn.onclick = () => {
-            if (Office.context.ui && Office.context.ui.messageParent) {
-                Office.context.ui.messageParent("close");
-            }
+            if (Office.context.ui?.messageParent) Office.context.ui.messageParent("close");
         };
     });
 
-    // Вспомогательная функция
+    // Вспомогательная функция для base64
     function arrayBufferToBase64(buffer) {
         let binary = "";
         const bytes = new Uint8Array(buffer);
         const chunkSize = 0x8000;
         for (let i = 0; i < bytes.length; i += chunkSize) {
-            binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
+            const chunk = bytes.subarray(i, i + chunkSize);
+            binary += String.fromCharCode.apply(null, chunk);
         }
         return btoa(binary);
     }
-
 </script>
 </body>
 </html>
