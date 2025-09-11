@@ -106,7 +106,7 @@ function regularPrices(event) {
 function openRegularPricesDialog() {
     Office.context.ui.displayDialogAsync(
         "https://kirryya.github.io/addIn//regular-prices.html",
-        { height: 92, width: 66, displayInIframe: true },
+        { height: 92, width: 52, displayInIframe: true },
         (result) => {
             const dialog = result.value;
 
