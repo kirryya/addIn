@@ -206,6 +206,15 @@
             padding: 4px 12px;
             border: 1px solid #D9D9D9;
             outline: none;
+
+            background-image: none;
+        }
+
+        /* Если нужна своя стрелочка справа */
+        .key_select {
+            background: #fff url("data:image/svg+xml;utf8,<svg fill='gray' height='12' viewBox='0 0 24 24' width='12' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>") no-repeat right 12px center;
+            background-size: 12px;
+            padding-right: 32px; /* чтобы текст не налезал на стрелку */
         }
 
         /* Стили для выпадающих пунктов */
