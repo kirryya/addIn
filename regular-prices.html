@@ -102,10 +102,11 @@
                                 <input type="text" id="licenseInput3" name="licenseInput3" class="key_input double" autocomplete="off">
                             </div>
                         </div>
-                        <label class="subtitle">Минимальная рентабельность SKU, %
-                            <input type="text" name="sheetCount" class="key_input" style="width: 758px" autocomplete="off">
-                        </label>
-                        <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                                <label for="licenseInput4" class="subtitle">Минимальная рентабельность SKU, %</label>
+                                <input type="text" id="licenseInput4" name="licenseInput4" class="key_input" autocomplete="off">
+                        </div>
+                            <div class="sub-tab-container">
                             <div class="sub-tab-container_subtitle">
                                 <label for="sheetCount1" class="subtitle">Предел снижения всех товаров, кроме KVI, СТМ, КЦО и Новинок, %</label>
                                 <input type="text" id="sheetCount1" name="sheetCount" class="key_input double" autocomplete="off">
@@ -132,13 +133,14 @@
                                     <input type="text" id="sheetCount5" name="sheetCount" class="key_input double" autocomplete="off">
                                 </div>
                             </div>
-                            <label class="subtitle" style="max-width: 368px;">Период
-                                <select id="periodSelect" name="period" class="key_select" style="min-width: 368px" >
+                            <div class="sub-tab-container_subtitle">
+                            <label class="subtitle" for="periodSelect">Период</label>
+                                <select id="periodSelect" name="period" class="key_select"  >
                                     <option value="food" selected>Неделя</option>
                                     <option value="drinks">Месяц</option>
                                     <option value="chemistry">Год</option>
                                 </select>
-                            </label>
+                            </div>
                         </div>
 <!--                        <div class="checkbox-title">-->
 <!--                            <label class="custom-checkbox">-->
@@ -152,7 +154,7 @@
                     <!-- Подтаб 2 -->
                     <div class="sub-tab-pane" id="codes">
                         <div class="sub-tab-container">
-                            <div>
+                            <div class="sub-tab-container-checkbox">
                                 <div class="checkbox-title">
                                     <label class="custom-checkbox doubleCheckbox">
                                         <input type="checkbox" name="codesCheckbox1">
@@ -161,7 +163,7 @@
                                     </label>
                                 </div>
                             </div>
-                            <div>
+                            <div class="sub-tab-container-checkbox">
                                 <div class="checkbox-title">
                                     <label class="custom-checkbox doubleCheckbox">
                                         <input type="checkbox" name="codesCheckbox2">
@@ -308,13 +310,14 @@
                             </div>
                         </div>
                         <div class="sub-tab-container">
-                            <label class="subtitle" style="max-width: 368px;">Метод расчета цен приоритетных конкурентов
-                                <select id="groupsSelect1" name="groupsSelect1" class="key_select" style="min-width: 368px" >
+                            <div class="sub-tab-container_subtitle">
+                            <label class="subtitle" for="groupsSelect1">Метод расчета цен приоритетных конкурентов  </label>
+                                <select id="groupsSelect1" name="groupsSelect1" class="key_select" >
                                     <option value="1" selected>Прямое сравнение</option>
                                     <option value="2">Метод эталонного конкурента</option>
                                     <option value="3">Среднерыночный уровень</option>
                                 </select>
-                            </label>
+                            </div>
                             <div class="sub-tab-container_subtitle">
                                 <label for="groupsInput3" class="subtitle">Персентили</label>
                                 <input type="text" id="groupsInput3" name="sheetCount" class="key_input double" autocomplete="off">
@@ -335,21 +338,23 @@
                             </div>
                         </div>
                         <div class="sub-tab-container">
-                            <label class="subtitle" style="max-width: 368px;">Стратегия конкурентных цен
-                                <select id="methodSelect" name="groupsSelect2" class="key_select" style="min-width: 368px" >
+                            <div class="sub-tab-container_subtitle">
+                            <label class="subtitle" for="groupsSelect2">Стратегия конкурентных цен   </label>
+                                <select id="groupsSelect2" name="groupsSelect2" class="key_select">
                                     <option value="1" selected>Стратегия «ниже рынка»</option>
                                     <option value="2">Стратегия «на уровне рынка»</option>
                                     <option value="3">Стратегия «выше рынка»</option>
                                 </select>
-                            </label>
+                            </div>
                             <div class="sub-tab-container_subtitle">
                                 <label for="groupsInput6" class="subtitle">Предел снижения КЦО</label>
                                 <input type="text" id="groupsInput6" name="sheetCount" class="key_input double" autocomplete="off">
                             </div>
                         </div>
-                        <label class="subtitle">Минимальная рентабельность для ЗЦ поставщиков для КЦО, %
-                            <input type="text" name="groupsInput7" class="key_input" style="width: 758px" autocomplete="off">
-                        </label>
+                        <div class="sub-tab-container_subtitle">
+                            <label for="groupsInput7" class="subtitle">Минимальная рентабельность для ЗЦ поставщиков для КЦО, % </label>
+                            <input type="text" id="groupsInput7" name="groupsInput7" class="key_input" autocomplete="off">
+                        </div>
                         <div class="sub-tab-container">
                             <div class="sub-tab-container_subtitle">
                                 <div class="sub-tab-container_subtitle">
@@ -484,7 +489,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="sub-tab-container">
+                        <div class="sub-tab-container checkbox-double">
+                            <div class="sub-tab-container-checkbox">
                             <div class="checkbox-title">
                                 <label class="custom-checkbox doubleCheckbox">
                                     <input type="checkbox" name="subcategoriesCheckbox1">
@@ -492,12 +498,15 @@
                                     Учитывать все конкурентные цены
                                 </label>
                             </div>
+                            </div>
+                            <div class="sub-tab-container-checkbox">
                             <div class="checkbox-title">
                                 <label class="custom-checkbox doubleCheckbox">
                                     <input type="checkbox" name="subcategoriesCheckbox2">
                                     <span></span>
                                     Считать по средневзвешенной закупочной цене
                                 </label>
+                            </div>
                             </div>
                         </div>
                         <div class="sub-tab-container">
