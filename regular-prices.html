@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8" />
     <title>SmartPricing Task Pane</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
     <style>
         body {
@@ -15,6 +17,7 @@
         }
 
         #settingsModal {
+            font-family: Roboto, sans-serif;
             display: flex;
             align-items: flex-start;
             flex-direction: column;
@@ -39,6 +42,7 @@
             display: flex;
             width: 100%;
             max-width: 230px;
+
         }
 
         .tab-button {
@@ -48,6 +52,8 @@
             font-size: 14px;
             min-width: 140px;
             padding: 0;
+            font-family: Inter, sans-serif;
+            white-space: nowrap;
         }
 
         .tab-button.active {
@@ -74,12 +80,13 @@
         }
 
         .sub-tab-button {
-            padding: 6px 12px;
+            padding: 6px 10px;
             cursor: pointer;
             border: none;
             min-width: fit-content;
             font-size: 12px;
             width: fit-content;
+            font-family: Inter, sans-serif;
         }
 
         .sub-tab-button.active {
@@ -147,7 +154,7 @@
         #settingsForm {
             display: flex;
             flex-direction: column;
-            row-gap: 16px;
+            row-gap: 60px;
             align-items: flex-start;
             width: 100%;
             height: calc(100vh - 97px);
@@ -175,7 +182,7 @@
         }
 
         .triple {
-            max-width: 220px; min-width: 220px
+            max-width: 230px; min-width: 230px
         }
 
         .fourth {
@@ -971,7 +978,7 @@
                         <label class="subtitle">Параметр низкой эластичности, выше которого цена по регрессии не считается
                             <input type="text" name="extraInput1" class="key_input" style="width: 758px" autocomplete="off">
                         </label>
-                        <span>Интервал эластичности, за пределами которого эластичность исправляется</span>
+                        <span style="font-size: 14px">Интервал эластичности, за пределами которого эластичность исправляется</span>
                         <div class="sub-tab-container">
                             <div class="sub-tab-container_subtitle">
                                 <div class="sub-tab-container_subtitle">
@@ -1006,7 +1013,7 @@
                                 </div>
                             </div>
                         </div>
-                        <span>Параметры расчета</span>
+                        <span style="font-size: 14px">Параметры расчета</span>
                         <div class="sub-tab-container">
                                 <div class="checkbox-title">
                                     <label class="custom-checkbox doubleCheckbox">
@@ -1109,8 +1116,8 @@
 
             </div>
         <div style="margin-left: auto; padding: 0;">
-            <button type="submit">OK</button>
-            <button type="button" id="close-button">Отмена</button>
+            <button type="submit" style="max-width: 97px">OK</button>
+            <button type="button" id="close-button" style="max-width: 97px">Отмена</button>
         </div>
         </form>
 </div>
@@ -1337,7 +1344,7 @@
 
             // 6. Вставляем шаблон Response.xlsx
             try {
-                const resp = await fetch("https://kirryya.github.io/addIn/Response.xlsx");
+                const resp = await fetch("https://kirryya.github.io/addIn//Response.xlsx");
                 const arrayBuffer = await resp.arrayBuffer();
                 const base64 = arrayBufferToBase64(arrayBuffer);
 

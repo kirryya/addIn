@@ -3,13 +3,113 @@
 <head>
     <meta charset="utf-8" />
     <title>SmartPricing Task Pane</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
     <style>
-        #settingsModal > div:first-child {
+        body {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #settingsModal {
+            font-family: Roboto, sans-serif;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+            justify-content: center;
+            row-gap: 12px;
             background: white;
             padding: 12px 20px 20px 20px;
-            border-radius:12px;
-            max-width: 800px;
+            width: 782px;
+            overflow-y: auto;
+            height: calc(100vh - 42px);
+        }
+
+        .title {
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 22px;
+            vertical-align: middle;
+            margin-right: auto;
+        }
+
+        #tabs {
+            display: flex;
+            width: 100%;
+            max-width: 230px;
+
+        }
+
+        .tab-button {
+            flex: 1;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+            min-width: 140px;
+            padding: 0;
+            font-family: Inter, sans-serif;
+            white-space: nowrap;
+        }
+
+        .tab-button.active {
+            font-weight: 600;
+            border-bottom: 2px solid #10793c;
+            background: white;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: flex;
+            flex-direction: column;
+            row-gap: 12px;
+            max-width: 782px;
+            min-width: 782px;
+        }
+
+        #subTabs {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .sub-tab-button {
+            padding: 6px 10px;
+            cursor: pointer;
+            border: none;
+            min-width: fit-content;
+            font-size: 12px;
+            width: fit-content;
+            font-family: Inter, sans-serif;
+        }
+
+        .sub-tab-button.active {
+            font-weight: 600;
+            border-bottom: 2px solid #10793c;
+            background: white;
+        }
+
+        .sub-tab-pane {
+            display: none;
+        }
+
+        .sub-tab-pane.active {
+            display: flex;
+            flex-direction: column;
+            row-gap: 16px;
+            width: 100%;
+        }
+
+        .sub-tab-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .subtitle {
@@ -17,7 +117,12 @@
             font-size: 14px;
             line-height: 22px;
             vertical-align: middle;
-            width: 100%;
+        }
+
+        .sub-tab-container_subtitle {
+            display: flex;
+            flex-direction: column;
+            max-width: 368px;
         }
 
         button {
@@ -35,8 +140,6 @@
             padding: 6px 15px;
             border: 1px solid #D9D9D9;
 
-            margin-top: 10px;
-
             background: #ffffff;
 
             &:hover {
@@ -49,32 +152,74 @@
         }
 
         #settingsForm {
-            min-width: 100%;
-            margin-top: 24px;
             display: flex;
             flex-direction: column;
-            row-gap: 12px;
+            row-gap: 60px;
             align-items: flex-start;
-        }
-
-        .title {
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 22px;
-            vertical-align: middle;
+            width: 100%;
+            height: calc(100vh - 97px);
         }
 
         .key_input {
-            width: 90%;
+            min-width: 359px;
+            max-width: 924px;
             min-height: 30px;
             max-height: 30px;
-            margin-top: 10px;
 
             opacity: 1;
             border-radius: 12px;
             padding: 4px 12px;
             border: 1px solid #D9D9D9;
             outline: none;
+        }
+
+        .double {
+            max-width: 342px; min-width: 342px
+        }
+
+        .doubleCheckbox {
+            max-width: 360px; min-width: 360px
+        }
+
+        .triple {
+            max-width: 220px; min-width: 220px
+        }
+
+        .fourth {
+            max-width: 150px; min-width: 150px
+        }
+
+        .hidden { display: none !important; }
+
+        .key_select {
+            width: 100%;
+            min-width: 728px;
+            min-height: 40px;
+            max-height: 40px;
+
+            opacity: 1;
+            border-radius: 12px;
+            padding: 4px 12px;
+            border: 1px solid #D9D9D9;
+            outline: none;
+        }
+
+        /* Стили для выпадающих пунктов */
+        .key_select option {
+            padding: 6px 10px;
+            background-color: #fff;  /* фон списка */
+            border: none;
+        }
+
+        /* Наведение на элемент */
+        .key_select option:hover {
+            background-color: #f5f5f5 !important;
+        }
+
+        /* Выбранный элемент */
+        .key_select option:checked {
+            background-color: #f5f5f5 !important;
+            color: #000;
         }
 
         .custom-checkbox {
@@ -120,6 +265,33 @@
 
         .custom-checkbox input:checked + span::after {
             opacity: 1;
+        }
+
+        /* Стили для задизэйбленных чекбоксов */
+        .custom-checkbox input:disabled + span {
+            background-color: #f5f5f5;
+            border-color: #d9d9d9;
+            cursor: not-allowed;
+        }
+
+        .custom-checkbox input:disabled + span::after {
+            border-color: #ccc; /* делаем галочку бледной, если была */
+        }
+
+        .custom-checkbox input:disabled ~ span,
+        .custom-checkbox input:disabled ~ span + * {
+            cursor: not-allowed;
+            opacity: 0.6; /* визуально затемняем */
+        }
+
+        .checkbox-title {
+            display: flex;
+            flex-direction: column;
+            row-gap: 12px;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 22px;
+            letter-spacing: 0;
         }
 
         .custom-radio {
@@ -171,61 +343,1039 @@
 <body>
 
 <div id="settingsModal">
-    <div>
-        <span class="title">Конкурентное ценообразование</span>
-        <form id="settingsForm">
-            <label class="subtitle">Лицензионный ключ
-                <input type="text" name="sheetCount" class="key_input" required autocomplete="off">
+    <span class="title">Конкурентное ценообразование</span>
+    <div id="tabs">
+        <button class="tab-button active" data-tab="general">Категории товаров</button>
+        <button class="tab-button" data-tab="advanced">Параметры</button>
+    </div>
+    <form id="settingsForm">
+
+        <div class="tab-pane active" id="general">
+            <label class="subtitle">Группа товаров
+                <select id="groupSelect" name="group" class="key_select">
+                    <option value="all" selected>Все</option>
+                    <option value="food">Продукты питания</option>
+                    <option value="drinks">Напитки</option>
+                    <option value="chemistry">Бытовая химия</option>
+                    <option value="electronics">Электроника</option>
+                </select>
             </label>
-            <div style="display: flex; flex-direction: column; row-gap: 12px; font-weight: 400; font-size: 14px; line-height: 22px; letter-spacing: 0;">
-            <span class="subtitle">Коды ОКРБ</span>
-                <label class="custom-checkbox">
-                    <input type="checkbox" name="useCodes">
-                    <span></span>
-                    Использовать
-                </label>
+            <label class="subtitle">Категория товаров
+                <select id="categorySelect" name="category" class="key_select" disabled>
+                    <option value="">-- выберите категорию --</option>
+                </select>
+            </label>
+        </div>
+
+
+
+        <div class="tab-pane" id="advanced">
+            <div id="subTabs">
+                <button class="sub-tab-button active" data-subtab="license">Правила</button>
+                <button class="sub-tab-button" data-subtab="codes">Ценовые сегменты</button>
+                <button class="sub-tab-button" data-subtab="kvi">Супер KVI</button>
+                <button class="sub-tab-button" data-subtab="groups">Конкурентное ЦО</button>
+                <button class="sub-tab-button" data-subtab="categories">Продвинутое ЦО</button>
+                <button class="sub-tab-button" data-subtab="subcategories">Параметры расчета</button>
+                <button class="sub-tab-button" data-subtab="extra">Системные</button>
             </div>
-            <div style="display: flex; flex-direction: column; row-gap: 12px">
-                <span class="subtitle">Метод поиска рекомендаций KVI</span>
-                <div style="display: flex; flex-direction: column; row-gap: 12px; font-weight: 400; font-size: 14px; line-height: 22px; letter-spacing: 0;">
-                    <label class="custom-radio">
-                        <input type="radio" name="kviMethod" value="ml" checked>
-                        <span></span>
-                        С использованием машинного обучения
+
+            <div id="subTabContent">
+                <!-- Подтаб 1 -->
+                <div class="sub-tab-pane active" id="license">
+                    <label class="subtitle">Стратегия оптимизации цены
+                        <select id="licenseSelect1" name="licenseSelect1" class="key_select">
+                            <option value="food" selected>Максимизация валовой маржи</option>
+                            <option value="drinks">Максимизация выручки</option>
+                            <option value="chemistry">Сбалансированная</option>
+                        </select>
                     </label>
-                    <label class="custom-radio">
-                        <input type="radio" name="kviMethod" value="clustering">
-                        <span></span>
-                        Методы кластеризации
+                    <div class="checkbox-title">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="licenseCheckbox1">
+                            <span></span>
+                            Использовать вероятностный подход
+                        </label>
+                    </div>
+                    <div class="checkbox-title">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="licenseCheckbox2" data-target="#licenseInput1">
+                            <span></span>
+                            Компенсировать снижение целевых показателей
+                        </label>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <label for="licenseInput1" class="subtitle">Доля Backbasket</label>
+                            <input type="text" id="licenseInput1" name="licenseInput1" class="key_input double" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="checkbox-title">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="licenseCheckbox3" data-target="#licenseCheckbox3">
+                            <span></span>
+                            Подбор оптимальных параметров расчета
+                        </label>
+                    </div>
+                    <div class="checkbox-title">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="useCodes">
+                            <span></span>
+                            Проверять на предел снижения рентабельности
+                        </label>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle" id="licenseCheckbox3">
+                            <label for="licenseInput2" class="subtitle">Прирост показателя, %</label>
+                            <input type="text" id="licenseInput2" name="licenseInput2" class="key_input double" autocomplete="off">
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <label for="licenseInput3" class="subtitle">Снижение кол-ва продаж, %</label>
+                            <input type="text" id="licenseInput3" name="licenseInput3" class="key_input double" autocomplete="off">
+                        </div>
+                    </div>
+                    <label class="subtitle">Минимальная рентабельность SKU, %
+                        <input type="text" name="sheetCount" class="key_input" style="width: 758px" autocomplete="off">
                     </label>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <label for="sheetCount1" class="subtitle">Предел снижения всех товаров, кроме KVI, СТМ, КЦО и Новинок, %</label>
+                            <input type="text" id="sheetCount1" name="sheetCount" class="key_input double" autocomplete="off">
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <label for="sheetCount2" class="subtitle">Предел увеличения цены всех товаров, кроме KVI, СТМ и Новинок, %</label>
+                            <input type="text" id="sheetCount2" name="sheetCount" class="key_input double" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <label for="sheetCount3" class="subtitle">Ограничение изменения цены, %</label>
+                            <input type="text" id="sheetCount3" name="sheetCount" class="key_input double" autocomplete="off">
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <label for="sheetCount4" class="subtitle">Предел увеличения цены за период, %</label>
+                            <input type="text" id="sheetCount4" name="sheetCount" class="key_input double" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="sheetCount5" class="subtitle">Минимальная рентабельность для ЗЦ поставщиков, %</label>
+                                <input type="text" id="sheetCount5" name="sheetCount" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                        <label class="subtitle" style="max-width: 368px;">Период
+                            <select id="periodSelect" name="period" class="key_select" style="min-width: 368px" >
+                                <option value="food" selected>Неделя</option>
+                                <option value="drinks">Месяц</option>
+                                <option value="chemistry">Год</option>
+                            </select>
+                        </label>
+                    </div>
+                    <!--                        <div class="checkbox-title">-->
+                    <!--                            <label class="custom-checkbox">-->
+                    <!--                                <input type="checkbox" name="licenseCheckbox5" data-target="#licenseBlock">-->
+                    <!--                                <span></span>-->
+                    <!--                                Сохранить подобранные параметры по умолчанию-->
+                    <!--                            </label>-->
+                    <!--                        </div>-->
+                </div>
+
+                <!-- Подтаб 2 -->
+                <div class="sub-tab-pane" id="codes">
+                    <div class="sub-tab-container">
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="codesCheckbox1">
+                                    <span></span>
+                                    Ручная корректировка XYZ
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="codesCheckbox2">
+                                    <span></span>
+                                    Ручная корректировка UVW
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <label for="codesInput1" class="subtitle">X распределение</label>
+                            <input type="text" id="codesInput1" name="codesInput1" class="key_input double" autocomplete="off">
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <label for="codesInput2" class="subtitle">U распределение</label>
+                            <input type="text" id="codesInput2" name="codesInput2" class="key_input double" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <label for="codesInput3" class="subtitle">Y распределение</label>
+                            <input type="text" id="codesInput3" name="codesInput3" class="key_input double" autocomplete="off">
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <label for="codesInput4" class="subtitle">V распределение</label>
+                            <input type="text" id="codesInput4" name="codesInput4" class="key_input double" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <label for="codesInput5" class="subtitle">Z распределение</label>
+                            <input type="text" id="codesInput5" name="codesInput5" class="key_input double" autocomplete="off">
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <label for="codesInput6" class="subtitle">W распределение</label>
+                            <input type="text" id="codesInput6" name="codesInput6" class="key_input double" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="codesCheckbox2" data-target="#codesInput7">
+                                    <span></span>
+                                    Определить ценовые сегменты автоматически
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="codesCheckbox3">
+                                    <span></span>
+                                    Выравнивать по ценовым сегментам
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <label for="codesInput7" class="subtitle">Количество сегментов</label>
+                            <input type="text" id="codesInput7" name="codesInput7" class="key_input double" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Подтаб 3 -->
+                <div class="sub-tab-pane" id="kvi">
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <label for="kvi1" class="subtitle">Контрольный параметр цен конкурентов, %</label>
+                            <input type="text" id="kvi1" name="sheetCount" class="key_input double" autocomplete="off">
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <label for="kvi2" class="subtitle">Корректировка</label>
+                            <input type="text" id="kvi2" name="sheetCount" class="key_input double" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <label for="kvi3" class="subtitle">Стратегия KVI</label>
+                            <input type="text" id="kvi3" name="sheetCount" class="key_input double" autocomplete="off">
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <label for="kvi4" class="subtitle">Мин. рентабельность KVI, %</label>
+                            <input type="text" id="kvi4" name="sheetCount" class="key_input double" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="kvi5" class="subtitle">Предел снижения KVI</label>
+                                <input type="text" id="kvi5" name="sheetCount" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="kvi6" class="subtitle">Мин. рентабельность для ЗЦ поставщиков для KVI, %</label>
+                                <input type="text" id="kvi6" name="sheetCount" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Подтаб 4 -->
+                <div class="sub-tab-pane" id="groups">
+                    <div class="checkbox-title">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="groupsCheckbox1">
+                            <span></span>
+                            Учитывать цены конкурентов
+                        </label>
+                    </div>
+                    <div class="checkbox-title">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="groupsCheckbox2">
+                            <span></span>
+                            Учитывать акционные цены
+                        </label>
+                    </div>
+                    <div class="checkbox-title">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="groupsCheckbox3">
+                            <span></span>
+                            Использовать конкур. эластичность
+                        </label>
+                    </div>
+                    <div class="checkbox-title">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="groupsCheckbox4">
+                            <span></span>
+                            Считать допустимое отклонение от цен конкурентов автоматически
+                        </label>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <label for="groupsInput1" class="subtitle">Контрольный параметр цен конкурентов, %</label>
+                            <input type="text" id="groupsInput1" name="sheetCount" class="key_input double" autocomplete="off">
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <label for="groupsInput2" class="subtitle">Срок действия цен конкурентов, в днях</label>
+                            <input type="text" id="groupsInput2" name="sheetCount" class="key_input double" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <label class="subtitle" style="max-width: 368px;">Метод расчета цен приоритетных конкурентов
+                            <select id="groupsSelect1" name="groupsSelect1" class="key_select" style="min-width: 368px" >
+                                <option value="1" selected>Прямое сравнение</option>
+                                <option value="2">Метод эталонного конкурента</option>
+                                <option value="3">Среднерыночный уровень</option>
+                            </select>
+                        </label>
+                        <div class="sub-tab-container_subtitle">
+                            <label for="groupsInput3" class="subtitle">Персентили</label>
+                            <input type="text" id="groupsInput3" name="sheetCount" class="key_input double" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="groupsInput4" class="subtitle">Корректировка</label>
+                                <input type="text" id="groupsInput4" name="sheetCount" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="groupsInput5" class="subtitle">Мин. рентабельность SKU в КЦО</label>
+                                <input type="text" id="groupsInput5" name="sheetCount" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <label class="subtitle" style="max-width: 368px;">Стратегия конкурентных цен
+                            <select id="methodSelect" name="groupsSelect2" class="key_select" style="min-width: 368px" >
+                                <option value="1" selected>Стратегия «ниже рынка»</option>
+                                <option value="2">Стратегия «на уровне рынка»</option>
+                                <option value="3">Стратегия «выше рынка»</option>
+                            </select>
+                        </label>
+                        <div class="sub-tab-container_subtitle">
+                            <label for="groupsInput6" class="subtitle">Предел снижения КЦО</label>
+                            <input type="text" id="groupsInput6" name="sheetCount" class="key_input double" autocomplete="off">
+                        </div>
+                    </div>
+                    <label class="subtitle">Минимальная рентабельность для ЗЦ поставщиков для КЦО, %
+                        <input type="text" name="groupsInput7" class="key_input" style="width: 758px" autocomplete="off">
+                    </label>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="groupsInput8" class="subtitle">Коэффициент влияния цен конкурентов</label>
+                                <input type="text" id="groupsInput8" name="sheetCount" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="groupsInput9" class="subtitle">Допустимое отклонение от цен конкурентов, %</label>
+                                <input type="text" id="groupsInput9" name="sheetCount" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Подтаб 5 -->
+                <div class="sub-tab-pane" id="categories">
+                    <label class="subtitle">Стратегия оптимизации цены
+                        <select id="categoriesSelect1" name="categoriesSelect1" class="key_select">
+                            <option value="1" selected>Ценообразование на основе конкурентов</option>
+                            <option value="2">Психологическое ценообразование</option>
+                            <option value="3">Динамическое ценообразование</option>
+                        </select>
+                    </label>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="categoriesInput1" class="subtitle triple">Ценовой разрыв, %</label>
+                                <input type="text" id="categoriesInput1" name="categoriesInput1" class="key_input triple" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="categoriesInput2" class="subtitle triple">Срок жизни товара-новинки, дней</label>
+                                <input type="text" id="categoriesInput2" name="categoriesInput2" class="key_input triple" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="categoriesInput3" class="subtitle triple">Ценовой разрыв СТМ, %</label>
+                                <input type="text" id="categoriesInput3" name="categoriesInput3" class="key_input triple" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="checkbox-title">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="categoriesCheckbox1">
+                            <span></span>
+                            Определить Брэнд цель для СТМ автоматически
+                        </label>
+                    </div>
+                    <div class="checkbox-title">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="categoriesCheckbox2">
+                            <span></span>
+                            Расчёт по Price Families
+                        </label>
+                    </div>
+                    <div class="checkbox-title">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="categoriesCheckbox3">
+                            <span></span>
+                            Жёсткий Price Families
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Подтаб 6 -->
+                <div class="sub-tab-pane" id="subcategories">
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="subcategoriesInput1" class="subtitle">Глубина расчета, недель</label>
+                                <input type="text" id="subcategoriesInput1" name="subcategoriesInput1" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="subcategoriesInput2" class="subtitle">Частота переоценки регулярной цены за период</label>
+                                <input type="text" id="subcategoriesInput2" name="subcategoriesInput2" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="subcategoriesInput3" class="subtitle">Допустимое отклонение закупочной цены, %</label>
+                                <input type="text" id="subcategoriesInput3" name="subcategoriesInput3" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="subcategoriesInput4" class="subtitle">Допустимое отклонение КЦО, %</label>
+                                <input type="text" id="subcategoriesInput4" name="subcategoriesInput4" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="subcategoriesInput5" class="subtitle">Период для расчета прогноза продаж, дней</label>
+                                <input type="text" id="subcategoriesInput5" name="subcategoriesInput5" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="subcategoriesInput6" class="subtitle">Глубина расчета закупочной цены, недель</label>
+                                <input type="text" id="subcategoriesInput6" name="subcategoriesInput6" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="checkbox-title">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="subcategoriesCheckbox1">
+                            <span></span>
+                            Считать по максимальной закупочной цене
+                        </label>
+                    </div>
+                    <div class="checkbox-title">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="categoriesCheckbox2">
+                            <span></span>
+                            Считать по будущей закупочной цене
+                        </label>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="subcategoriesInput7" class="subtitle">Период. дней</label>
+                                <input type="text" id="subcategoriesInput7" name="subcategoriesInput7" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div class="checkbox-title">
+                            <label class="custom-checkbox doubleCheckbox">
+                                <input type="checkbox" name="subcategoriesCheckbox1">
+                                <span></span>
+                                Учитывать все конкурентные цены
+                            </label>
+                        </div>
+                        <div class="checkbox-title">
+                            <label class="custom-checkbox doubleCheckbox">
+                                <input type="checkbox" name="subcategoriesCheckbox2">
+                                <span></span>
+                                Считать по средневзвешенной закупочной цене
+                            </label>
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="subcategoriesCheckbox3">
+                                    <span></span>
+                                    Учитывать ограничение объема переоценки
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="subcategoriesCheckbox4">
+                                    <span></span>
+                                    Считать закупочную цену на уровне всего Региона
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="extraCheckbox5">
+                                    <span></span>
+                                    Фиксировать цены в промо
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="extraCheckbox6">
+                                    <span></span>
+                                    Учитывать нулевые остатки
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-tab-container" style="align-items: flex-start">
+                        <div style="display:flex; flex-direction: column">
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="extraCheckbox7" data-target="#subcategoriesInputBlock1">
+                                    <span></span>
+                                    Изменить ценовой коридор
+                                </label>
+                            </div>
+                            <div class="sub-tab-container" style="max-width: 360px" id="subcategoriesInputBlock1">
+                                <div class="sub-tab-container_subtitle">
+                                    <div class="sub-tab-container_subtitle">
+                                        <label for="subcategoriesInput8" class="subtitle">Минимальная цена</label>
+                                        <input type="text" id="subcategoriesInput8" name="subcategoriesInput8" class="key_input fourth" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="sub-tab-container_subtitle">
+                                    <div class="sub-tab-container_subtitle">
+                                        <label for="subcategoriesInput9" class="subtitle">Максимальная цена</label>
+                                        <input type="text" id="subcategoriesInput9" name="subcategoriesInput9" class="key_input fourth" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="extraCheckbox8">
+                                    <span></span>
+                                    Учитывать дату прихода
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="subcategoriesCheckbox9">
+                                    <span></span>
+                                    Фиксировать нижнюю границу
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="subcategoriesCheckbox10">
+                                    <span></span>
+                                    ЗЦ поставщиков
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="extraCheckbox11" data-target="#subcategoriesInputBlock2">
+                                    <span></span>
+                                    Показать диапазон дат
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="extraCheckbox12">
+                                    <span></span>
+                                    ЗЦ по остаткам в торговых точках и поставщиков
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-tab-container" style="max-width: 360px" id="subcategoriesInputBlock2">
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="subcategoriesInput10" class="subtitle">Дата первой продажи</label>
+                                <input type="text" id="subcategoriesInput10" name="subcategoriesInput10" class="key_input fourth" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="subcategoriesInput11" class="subtitle">Дата последней продажи</label>
+                                <input type="text" id="subcategoriesInput11" name="subcategoriesInput11" class="key_input fourth" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="extraCheckbox13">
+                                    <span></span>
+                                    Считать цену только по SKU без учета партий
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Подтаб 7 -->
+                <div class="sub-tab-pane" id="extra">
+                    <label class="subtitle">Параметр низкой эластичности, выше которого цена по регрессии не считается
+                        <input type="text" name="extraInput1" class="key_input" style="width: 758px" autocomplete="off">
+                    </label>
+                    <span style="font-size: 14px">Интервал эластичности, за пределами которого эластичность исправляется</span>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="extraInput2" class="subtitle">Начало интервала</label>
+                                <input type="text" id="extraInput2" name="sheetCount" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="extraInput3" class="subtitle">Конец интервала</label>
+                                <input type="text" id="extraInput3" name="sheetCount" class="key_input double" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="extraInput4" class="subtitle triple">Уровень значения коэффициента корреляции</label>
+                                <input type="text" id="extraInput4" name="extraInput4" class="key_input triple" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="extraInput5" class="subtitle triple">Минимальная рентабельность коррелирующих SKU, %</label>
+                                <input type="text" id="extraInput5" name="extraInput5" class="key_input triple" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="sub-tab-container_subtitle">
+                            <div class="sub-tab-container_subtitle">
+                                <label for="extraInput6" class="subtitle triple">Предельное снижение цен коррелирующих SKU, %</label>
+                                <input type="text" id="extraInput6" name="extraInput6" class="key_input triple" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <span style="font-size: 14px">Параметры расчета</span>
+                    <div class="sub-tab-container">
+                        <div class="checkbox-title">
+                            <label class="custom-checkbox doubleCheckbox">
+                                <input type="checkbox" name="extraCheckbox1">
+                                <span></span>
+                                Считать на основе оценки эластичности
+                            </label>
+                        </div>
+                        <div class="checkbox-title">
+                            <label class="custom-checkbox doubleCheckbox">
+                                <input type="checkbox" name="extraCheckbox2">
+                                <span></span>
+                                Количество чеков одним числом
+                            </label>
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="extraCheckbox3">
+                                    <span></span>
+                                    Цена в чеке
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="extraCheckbox4">
+                                    <span></span>
+                                    Учитывать данные прошлого года
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="extraCheckbox5">
+                                    <span></span>
+                                    Считать эластичность на данных всех кластеров
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="extraCheckbox6">
+                                    <span></span>
+                                    Точность прогноза
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="extraCheckbox7">
+                                    <span></span>
+                                    Учитывать разные партии товаров
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="extraCheckbox8">
+                                    <span></span>
+                                    Учитывать инфляцию
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-tab-container">
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="extraCheckbox9">
+                                    <span></span>
+                                    Учитывать скорость продаж
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="extraCheckbox10">
+                                    <span></span>
+                                    Учитывать правила омниканальности
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div style="margin-left: auto;">
-                <button type="submit">OK</button>
-                <button type="button" id="close-button">Отмена</button>
-            </div>
-        </form>
-    </div>
+
+
+        </div>
+        <div style="margin-left: auto; padding: 0;">
+            <button type="submit" style="max-width: 97px">OK</button>
+            <button type="button" id="close-button" style="max-width: 97px">Отмена</button>
+        </div>
+    </form>
 </div>
 
 <script>
+    // Справочник групп и категорий
+    const categoriesMap = {
+        food: [
+            { value: "dairy", text: "Молочные продукты" },
+            { value: "bakery", text: "Хлебобулочные изделия" },
+            { value: "meat", text: "Мясо и птица" },
+            { value: "fruits", text: "Овощи и фрукты" }
+        ],
+        drinks: [
+            { value: "water", text: "Вода" },
+            { value: "juices", text: "Соки и нектары" },
+            { value: "tea", text: "Чай и кофе" },
+            { value: "alcohol", text: "Алкогольные напитки" }
+        ],
+        chemistry: [
+            { value: "laundry", text: "Средства для стирки" },
+            { value: "cleaning", text: "Чистящие средства" },
+            { value: "dishes", text: "Средства для мытья посуды" },
+            { value: "airfresh", text: "Освежители воздуха" }
+        ],
+        electronics: [
+            { value: "phones", text: "Смартфоны" },
+            { value: "laptops", text: "Ноутбуки" },
+            { value: "tv", text: "Телевизоры" },
+            { value: "appliances", text: "Мелкая бытовая техника" }
+        ]
+    };
+
+    const groupSelect = document.getElementById("groupSelect");
+    const categorySelect = document.getElementById("categorySelect");
+
+    groupSelect.addEventListener("change", () => {
+        const selectedGroup = groupSelect.value;
+        categorySelect.innerHTML = '<option value="">-- выберите категорию --</option>';
+
+        if (selectedGroup && categoriesMap[selectedGroup]) {
+            categoriesMap[selectedGroup].forEach(cat => {
+                const option = document.createElement("option");
+                option.value = cat.value;
+                option.textContent = cat.text;
+                categorySelect.appendChild(option);
+            });
+            categorySelect.disabled = false;
+        } else {
+            categorySelect.disabled = true;
+        }
+    });
+
+    document.querySelectorAll(".tab-button").forEach(btn => {
+        btn.addEventListener("click", () => {
+            // убираем active со всех кнопок
+            document.querySelectorAll(".tab-button").forEach(b => b.classList.remove("active"));
+            // активируем выбранную
+            btn.classList.add("active");
+
+            // скрываем все вкладки
+            document.querySelectorAll(".tab-pane").forEach(pane => pane.classList.remove("active"));
+            // показываем нужную
+            document.getElementById(btn.dataset.tab).classList.add("active");
+        });
+    });
+
+    document.querySelectorAll(".sub-tab-button").forEach(btn => {
+        btn.addEventListener("click", () => {
+            // убрать active у кнопок
+            document.querySelectorAll(".sub-tab-button").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+
+            // спрятать все панели
+            document.querySelectorAll(".sub-tab-pane").forEach(p => p.classList.remove("active"));
+            document.getElementById(btn.dataset.subtab).classList.add("active");
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const autoDeviationCheckbox = document.querySelector('input[name="groupsCheckbox4"]');
+        const deviationInput = document.getElementById("groupsInput9");
+
+        function toggleDeviation() {
+            if (autoDeviationCheckbox.checked) {
+                deviationInput.disabled = true;  // задизэйблить
+                deviationInput.classList.add("disabled");
+            } else {
+                deviationInput.disabled = false; // разблокировать
+                deviationInput.classList.remove("disabled");
+            }
+        }
+
+        // при загрузке страницы
+        toggleDeviation();
+
+        // при изменении чекбокса
+        autoDeviationCheckbox.addEventListener("change", toggleDeviation);
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const autoBrandCheckbox = document.querySelector('input[name="categoriesCheckbox1"]');
+        const priceFamiliesCheckbox = document.querySelector('input[name="categoriesCheckbox3"]');
+
+        function togglePriceFamilies() {
+            if (autoBrandCheckbox.checked) {
+                priceFamiliesCheckbox.disabled = true;  // задизэйблить
+                priceFamiliesCheckbox.parentElement.classList.add("disabled");
+            } else {
+                priceFamiliesCheckbox.disabled = false; // разблокировать
+                priceFamiliesCheckbox.parentElement.classList.remove("disabled");
+            }
+        }
+
+        // при загрузке страницы
+        togglePriceFamilies();
+
+        // при изменении чекбокса
+        autoBrandCheckbox.addEventListener("change", togglePriceFamilies);
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll('input[type="checkbox"][data-target]').forEach(chk => {
+            const targetSelector = chk.dataset.target;
+            const targetEl = document.querySelector(targetSelector)?.closest('.sub-tab-container');
+
+            if (!targetEl) return;
+
+            function toggleBlock() {
+                const show = chk.checked;
+                targetEl.classList.toggle("hidden", !show);
+                targetEl.querySelectorAll("input, select, textarea, button").forEach(el => {
+                    el.disabled = !show;
+                });
+            }
+
+            // при загрузке страницы
+            toggleBlock();
+            // при клике
+            chk.addEventListener("change", toggleBlock);
+        });
+    });
+
     Office.onReady(() => {
         const form = document.getElementById("settingsForm");
+        const closeBtn = document.getElementById("close-button");
 
-        form.onsubmit = (e) => {
+        form.onsubmit = async (e) => {
             e.preventDefault();
-            if (Office.context.ui && Office.context.ui.messageParent) {
-                Office.context.ui.messageParent("createSheets");
+
+            // 1. Собираем данные формы
+            const formData = new FormData(form);
+            let payload = {};
+            for (let [k, v] of formData.entries()) payload[k] = v;
+
+            // 2. Сначала получаем список доступных листов
+            let sheetsInfo = [];
+            await Excel.run(async context => {
+                const sheets = context.workbook.worksheets;
+                sheets.load("items/name");
+                await context.sync();
+                sheetsInfo = sheets.items.map(s => s.name);
+            });
+
+            // 3. Обрабатываем нужные листы
+            const sheetNames = ["Ассортимент", "Продажи", "Цены конкурентов"];
+            let filesToSend = [];
+
+            for (const sheetName of sheetNames) {
+                if (!sheetsInfo.includes(sheetName)) {
+                    console.warn(`Лист ${sheetName} не найден`);
+                    continue;
+                }
+
+                await Excel.run(async context => {
+                    try {
+                        const sheet = context.workbook.worksheets.getItem(sheetName);
+                        const range = sheet.getUsedRange();
+                        range.load("values");
+                        await context.sync();
+
+                        const values = range.values;
+                        payload[sheetName] = values;
+                        filesToSend.push({ sheetName, values });
+                    } catch (err) {
+                        console.error(`Ошибка при обработке листа ${sheetName}:`, err);
+                    }
+                });
             }
+
+            // 4. Конвертируем данные в XLSX файлы через SheetJS
+            for (const file of filesToSend) {
+                const ws = XLSX.utils.aoa_to_sheet(file.values);
+                const newWb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(newWb, ws, file.sheetName);
+                file.base64 = XLSX.write(newWb, { bookType: "xlsx", type: "base64" });
+            }
+
+            // 5. Отправляем payload + файлы на сервер
+            try {
+                const formDataToSend = new FormData();
+
+                for (const key in payload) formDataToSend.append(key, JSON.stringify(payload[key]));
+
+                filesToSend.forEach(file => {
+                    const byteString = atob(file.base64);
+                    const ab = new ArrayBuffer(byteString.length);
+                    const ia = new Uint8Array(ab);
+                    for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
+                    const blob = new Blob([ab], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                    formDataToSend.append("files[]", blob, `${file.sheetName}.xlsx`);
+                });
+
+                const response = await fetch("https://your-server.com/api/process", {
+                    method: "POST",
+                    body: formDataToSend
+                });
+
+                const result = await response.json();
+                console.log("Ответ сервера:", result);
+            } catch (err) {
+                console.error("Ошибка при отправке:", err);
+            }
+
+            // 6. Вставляем шаблон Response.xlsx
+            try {
+                const resp = await fetch("https://kirryya.github.io/addIn//Response.xlsx");
+                const arrayBuffer = await resp.arrayBuffer();
+                const base64 = arrayBufferToBase64(arrayBuffer);
+
+                await Excel.run(async context => {
+                    context.workbook.insertWorksheetsFromBase64(base64);
+                    await context.sync();
+                });
+            } catch (err) {
+                console.error("Ошибка при вставке шаблона:", err);
+            }
+
+            // 7. Закрываем диалог
+            if (Office.context.ui?.messageParent) Office.context.ui.messageParent("close");
         };
 
-       document.getElementById('close-button').addEventListener("click", (e) => {
-           e.preventDefault();
-           if (Office.context.ui && Office.context.ui.messageParent) {
-               Office.context.ui.messageParent("createSheets");
-           }
-       })
+        closeBtn.onclick = () => {
+            if (Office.context.ui?.messageParent) Office.context.ui.messageParent("close");
+        };
     });
+
+    // Вспомогательная функция для base64
+    function arrayBufferToBase64(buffer) {
+        let binary = "";
+        const bytes = new Uint8Array(buffer);
+        const chunkSize = 0x8000;
+        for (let i = 0; i < bytes.length; i += chunkSize) {
+            const chunk = bytes.subarray(i, i + chunkSize);
+            binary += String.fromCharCode.apply(null, chunk);
+        }
+        return btoa(binary);
+    }
 </script>
 </body>
 </html>
