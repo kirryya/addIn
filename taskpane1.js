@@ -106,7 +106,7 @@ function regularPrices(event) {
 function openRegularPricesDialog() {
     Office.context.ui.displayDialogAsync(
         "https://kirryya.github.io/addIn//regular-prices.html",
-        { height: 92, width: 44, displayInIframe: true },
+        { height: 92, width: 66, displayInIframe: true },
         (result) => {
             const dialog = result.value;
 
@@ -126,9 +126,9 @@ function openNewTemplate(event) {
 
             // данные берём из файлов
             const files = [
-                { name: "Цены конкурентов", path: "https://kirryya.github.io/addIn//TemplateCompetitors.xlsx", sheetName: "Цены конкурентов" },
-                { name: "Продажи", path: "https://kirryya.github.io/addIn//TemplateSales_1.xlsx", sheetName: "Продажи" },
-                { name: "Ассортимент", path: "https://kirryya.github.io/addIn//TemplateLastPrices.xlsx", sheetName: "Ассортимент" },
+                { name: "Цены конкурентов", path: "https://kirryya.github.io/addIn/TemplateCompetitors.xlsx", sheetName: "Цены конкурентов" },
+                { name: "Продажи", path: "https://kirryya.github.io/addIn/TemplateSales_1.xlsx", sheetName: "Продажи" },
+                { name: "Ассортимент", path: "https://kirryya.github.io/addIn/TemplateLastPrices.xlsx", sheetName: "Ассортимент" },
             ];
 
             for (const file of files) {
