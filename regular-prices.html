@@ -377,12 +377,21 @@
                         </div>
                         <div class="sub-tab-container">
                             <div class="sub-tab-container_subtitle">
-                            <label class="subtitle" for="groupsSelect2">Стратегия конкурентных цен   </label>
-                                <select id="groupsSelect2" name="groupsSelect2" class="key_select">
-                                    <option value="1" selected>Стратегия «ниже рынка»</option>
-                                    <option value="2">Стратегия «на уровне рынка»</option>
-                                    <option value="3">Стратегия «выше рынка»</option>
-                                </select>
+                                <label for="groupsSelect2" class="subtitle">
+                                    Стратегия конкурентных цен
+                                </label>
+                                <div class="custom-select-wrapper">
+                                    <div class="custom-select" id="customSelect">
+                                        <div class="custom-select-trigger">Стратегия «ниже рынка»</div>
+                                        <div class="custom-options">
+                                            <span class="custom-option selected" data-value="1">Стратегия «ниже рынка»</span>
+                                            <span class="custom-option" data-value="2">Стратегия «на уровне рынка»</span>
+                                            <span class="custom-option" data-value="3">Стратегия «выше рынка»</span>
+                                        </div>
+                                    </div>
+                                    <!-- Скрытый input для формы -->
+                                    <input type="hidden" name="groupsSelect2" id="groupsSelect2" value="1" />
+                                </div>
                             </div>
                             <div class="sub-tab-container_subtitle">
                                 <label for="groupsInput6" class="subtitle">Предел снижения КЦО</label>
@@ -1124,6 +1133,38 @@
         }
         return btoa(binary);
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const select = document.querySelector("#customSelect");
+        const trigger = select.querySelector(".custom-select-trigger");
+        const options = select.querySelectorAll(".custom-option");
+        const hiddenInput = document.querySelector("#groupsSelect2");
+
+        trigger.addEventListener("click", () => {
+            select.classList.toggle("open");
+        });
+
+        options.forEach(option => {
+            option.addEventListener("click", () => {
+                // обновляем выбранное значение
+                trigger.textContent = option.textContent;
+                hiddenInput.value = option.dataset.value;
+
+                // обновляем классы
+                options.forEach(o => o.classList.remove("selected"));
+                option.classList.add("selected");
+
+                select.classList.remove("open");
+            });
+        });
+
+        // клик вне селекта = закрыть
+        document.addEventListener("click", e => {
+            if (!select.contains(e.target)) {
+                select.classList.remove("open");
+            }
+        });
+    });
 </script>
 
 

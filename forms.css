@@ -362,3 +362,74 @@ button {
 .custom-radio input:checked + span::after {
     opacity: 1;
 }
+
+.custom-select-wrapper {
+    position: relative;
+    width: 100%;
+    font-family: 'Inter', 'Roboto', sans-serif;
+}
+
+.custom-select {
+    position: relative;
+    user-select: none;
+}
+
+.custom-select-trigger {
+    background: #fff;
+    border: 1px solid #D9D9D9;
+    border-radius: 12px;
+    padding: 11px 40px 10px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    position: relative;
+}
+
+/* стрелочка */
+.custom-select-trigger::after {
+    content: "";
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    width: 7px;
+    height: 7px;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    transform: translateY(-50%) rotate(45deg);
+}
+
+.custom-select.open .custom-select-trigger::after {
+    transform: translateY(-50%) rotate(-135deg);
+}
+
+/* выпадающий список */
+.custom-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #D9D9D9;
+    margin-top: 4px;
+    display: none;
+    flex-direction: column;
+    z-index: 99;
+}
+
+.custom-select.open .custom-options {
+    display: flex;
+}
+
+.custom-option {
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.custom-option:hover {
+    background: #f5f5f5;
+}
+
+.custom-option.selected {
+    font-weight: 500;
+    background: #f0f0f0;
+}
