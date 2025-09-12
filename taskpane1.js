@@ -179,7 +179,7 @@ function arrayBufferToBase64(buffer) {
 function competitivePrices(event) {
     Office.context.ui.displayDialogAsync(
         "https://kirryya.github.io/addIn/competitive-prices.html",
-        { height: 92, width: 44, displayInIframe: true }
+        { height: 92, width: 52, displayInIframe: true }
     );
 
     if (event && typeof event.completed === "function") {
@@ -190,7 +190,7 @@ function competitivePrices(event) {
 function KVI(event) {
     Office.context.ui.displayDialogAsync(
         "https://kirryya.github.io/addIn/ctm-prices.html",
-        { height: 92, width: 44, displayInIframe: true }
+        { height: 92, width: 52, displayInIframe: true }
     );
 
     if (event && typeof event.completed === "function") {
@@ -201,7 +201,7 @@ function KVI(event) {
 function CTM(event) {
     Office.context.ui.displayDialogAsync(
         "https://kirryya.github.io/addIn/kvi-prices.html",
-        { height: 92, width: 44, displayInIframe: true }
+        { height: 92, width: 52, displayInIframe: true }
     );
 
     if (event && typeof event.completed === "function") {
