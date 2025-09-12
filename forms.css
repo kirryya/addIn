@@ -433,3 +433,38 @@ button {
     font-weight: 500;
     background: #f0f0f0;
 }
+
+.loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #4caf50;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.checkmark {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-block;
+    background: #4caf50;
+    position: relative;
+    margin: 0 auto;
+}
+.checkmark::after {
+    content: "";
+    position: absolute;
+    left: 10px;
+    top: 6px;
+    width: 10px;
+    height: 18px;
+    border: solid white;
+    border-width: 0 4px 4px 0;
+    transform: rotate(45deg);
+}

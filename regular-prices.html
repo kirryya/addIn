@@ -8,44 +8,6 @@
     <link rel="stylesheet" type="text/css" href="forms.css">
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
 </head>
-
-<style>
-    .loader {
-        border: 4px solid #f3f3f3;
-        border-top: 4px solid #4caf50;
-        border-radius: 50%;
-        width: 36px;
-        height: 36px;
-        animation: spin 1s linear infinite;
-        margin: 0 auto;
-    }
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-    /* Галочка */
-    .checkmark {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        display: inline-block;
-        background: #4caf50;
-        position: relative;
-        margin: 0 auto;
-    }
-    .checkmark::after {
-        content: "";
-        position: absolute;
-        left: 10px;
-        top: 6px;
-        width: 10px;
-        height: 18px;
-        border: solid white;
-        border-width: 0 4px 4px 0;
-        transform: rotate(45deg);
-    }
-</style>
 <body>
 
 <div id="settingsModal">
@@ -55,27 +17,40 @@
         <button class="tab-button" data-tab="advanced" type="button">Параметры</button>
     </div>
     <form id="settingsForm">
-
-    <div class="tab-pane active" id="general">
-        <label class="subtitle">Группа товаров
-            <select id="groupSelect" name="group" class="key_select">
-                <option value="all" selected>Все</option>
-                <option value="food">Продукты питания</option>
-                <option value="drinks">Напитки</option>
-                <option value="chemistry">Бытовая химия</option>
-                <option value="electronics">Электроника</option>
-            </select>
+        <div class="tab-pane active" id="general">
+        <label for="generalSelect1" class="subtitle">
+            Группа товаров
         </label>
-        <label class="subtitle">Категория товаров
-            <select id="categorySelect" name="category" class="key_select" disabled>
-                <option value="">-- выберите категорию --</option>
-            </select>
+        <div class="custom-select-wrapper">
+            <div class="custom-select" >
+                <div class="custom-select-trigger">Все</div>
+                <div class="custom-options">
+                    <span class="custom-option selected" data-value="all">Все</span>
+                    <span class="custom-option" data-value="food">Продукты питания</span>
+                    <span class="custom-option" data-value="drinks">Напитки</span>
+                    <span class="custom-option" data-value="chemistry">Бытовая химия</span>
+                    <span class="custom-option" data-value="electronics">Электроника</span>
+                </div>
+            </div>
+            <!-- Скрытый input для формы -->
+            <input type="hidden" name="generalSelect1" id="generalSelect1" value="all" />
+        </div>
+        <label for="generalSelect2" class="subtitle">
+            Категория товаров
         </label>
+        <div class="custom-select-wrapper">
+            <div class="custom-select" >
+                <div class="custom-select-trigger">Все</div>
+                <div class="custom-options">
+                    <span class="custom-option selected" data-value="all">Все</span>
+                </div>
+            </div>
+            <!-- Скрытый input для формы -->
+            <input type="hidden" name="generalSelect2" id="generalSelect2" value="1" />
+        </div>
     </div>
 
-
-
-            <div class="tab-pane" id="advanced">
+        <div class="tab-pane" id="advanced">
                 <div id="subTabs">
                     <button class="sub-tab-button active" data-subtab="license" type="button">Правила</button>
                     <button class="sub-tab-button" data-subtab="codes" type="button">Ценовые сегменты</button>
@@ -839,12 +814,13 @@
 
 
             </div>
+
         <div style="margin-left: auto; padding: 0;">
             <button type="submit" style="max-width: 97px">OK</button>
 
             <button type="button" id="close-button" style="max-width: 97px">Отмена</button>
         </div>
-        </form>
+    </form>
 
     <div id="statusArea" style="margin-top: 20px; text-align: center;"></div>
 </div>
@@ -878,24 +854,87 @@
         ]
     };
 
-    const groupSelect = document.getElementById("groupSelect");
-    const categorySelect = document.getElementById("categorySelect");
+    document.addEventListener("DOMContentLoaded", () => {
+        const wrappers = document.querySelectorAll(".custom-select-wrapper");
 
-    groupSelect.addEventListener("change", () => {
-        const selectedGroup = groupSelect.value;
-        categorySelect.innerHTML = '<option value="">-- выберите категорию --</option>';
+        function initCustomSelect(wrapper) {
+            const select = wrapper.querySelector(".custom-select");
+            const trigger = select.querySelector(".custom-select-trigger");
+            const optionsContainer = select.querySelector(".custom-options");
+            const hiddenInput = wrapper.querySelector("input[type=hidden]");
 
-        if (selectedGroup && categoriesMap[selectedGroup]) {
-            categoriesMap[selectedGroup].forEach(cat => {
-                const option = document.createElement("option");
-                option.value = cat.value;
-                option.textContent = cat.text;
-                categorySelect.appendChild(option);
+            function attachOptionHandlers() {
+                const options = optionsContainer.querySelectorAll(".custom-option");
+                options.forEach(option => {
+                    option.addEventListener("click", () => {
+                        trigger.textContent = option.textContent;
+                        hiddenInput.value = option.dataset.value;
+
+                        options.forEach(o => o.classList.remove("selected"));
+                        option.classList.add("selected");
+
+                        select.classList.remove("open");
+
+                        // триггер события change
+                        hiddenInput.dispatchEvent(new Event("change", { bubbles: true }));
+                    });
+                });
+            }
+
+            attachOptionHandlers();
+
+            trigger.addEventListener("click", () => {
+                document.querySelectorAll(".custom-select.open")
+                    .forEach(openSelect => {
+                        if (openSelect !== select) openSelect.classList.remove("open");
+                    });
+                select.classList.toggle("open");
             });
-            categorySelect.disabled = false;
-        } else {
-            categorySelect.disabled = true;
+
+            return { optionsContainer, trigger, hiddenInput, attachOptionHandlers };
         }
+
+        const groupWrapper = document.getElementById("generalSelect1").closest(".custom-select-wrapper");
+        const categoryWrapper = document.getElementById("generalSelect2").closest(".custom-select-wrapper");
+
+        const groupSelect = initCustomSelect(groupWrapper);
+        const categorySelect = initCustomSelect(categoryWrapper);
+
+        document.addEventListener("click", e => {
+            if (!e.target.closest(".custom-select-wrapper")) {
+                document.querySelectorAll(".custom-select.open").forEach(openSelect => openSelect.classList.remove("open"));
+            }
+        });
+
+        // Каскадная логика
+        groupSelect.hiddenInput.addEventListener("change", () => {
+            const selectedGroup = groupSelect.hiddenInput.value;
+
+            // очищаем категории
+            categorySelect.optionsContainer.innerHTML = '';
+            categorySelect.trigger.textContent = 'Все';
+            categorySelect.hiddenInput.value = 'all';
+
+            // добавляем "Все"
+            const allOption = document.createElement('span');
+            allOption.classList.add('custom-option', 'selected');
+            allOption.dataset.value = 'all';
+            allOption.textContent = 'Все';
+            categorySelect.optionsContainer.appendChild(allOption);
+
+            if (selectedGroup !== 'all' && categoriesMap[selectedGroup]) {
+                categoriesMap[selectedGroup].forEach(cat => {
+                    const option = document.createElement('span');
+                    option.classList.add('custom-option');
+                    option.dataset.value = cat.value;
+                    option.textContent = cat.text;
+                    categorySelect.optionsContainer.appendChild(option);
+                });
+            }
+
+            // заново навешиваем обработчики на новые опции
+            categorySelect.attachOptionHandlers();
+        });
     });
 
     document.querySelectorAll(".tab-button").forEach(btn => {
@@ -1133,38 +1172,6 @@
         }
         return btoa(binary);
     }
-
-    document.addEventListener("DOMContentLoaded", () => {
-        const select = document.querySelector("#customSelect");
-        const trigger = select.querySelector(".custom-select-trigger");
-        const options = select.querySelectorAll(".custom-option");
-        const hiddenInput = document.querySelector("#groupsSelect2");
-
-        trigger.addEventListener("click", () => {
-            select.classList.toggle("open");
-        });
-
-        options.forEach(option => {
-            option.addEventListener("click", () => {
-                // обновляем выбранное значение
-                trigger.textContent = option.textContent;
-                hiddenInput.value = option.dataset.value;
-
-                // обновляем классы
-                options.forEach(o => o.classList.remove("selected"));
-                option.classList.add("selected");
-
-                select.classList.remove("open");
-            });
-        });
-
-        // клик вне селекта = закрыть
-        document.addEventListener("click", e => {
-            if (!select.contains(e.target)) {
-                select.classList.remove("open");
-            }
-        });
-    });
 </script>
 
 
