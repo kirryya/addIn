@@ -25,7 +25,7 @@ function saveLicenseAndContinue(callback) {
 
 function generalSettings(event) {
     Office.context.ui.displayDialogAsync(
-        "https://kirryya.github.io/addIn//taskpane.html",
+        "https://kirryya.github.io/addIn/taskpane.html",
         {height: 44, width: 40, displayInIframe: true},
         (asyncResult) => {
             const dialog = asyncResult.value;
@@ -53,7 +53,7 @@ function newTemplate(event) {
     if (!isLicenseOk()) {
         // Ключ не введён — сначала просим пользователя ввести
         Office.context.ui.displayDialogAsync(
-            "https://kirryya.github.io/addIn//taskpane.html",
+            "https://kirryya.github.io/addIn/taskpane.html",
             { height: 44, width: 40, displayInIframe: true },
             (asyncResult) => {
                 const dialog = asyncResult.value;
@@ -79,7 +79,7 @@ function regularPrices(event) {
     if (!isLicenseOk()) {
         // Ключ не введён — сначала просим пользователя ввести
         Office.context.ui.displayDialogAsync(
-            "https://kirryya.github.io/addIn//taskpane.html",
+            "https://kirryya.github.io/addIn/taskpane.html",
             { height: 44, width: 40, displayInIframe: true },
             (asyncResult) => {
                 const dialog = asyncResult.value;
@@ -105,7 +105,7 @@ function regularPrices(event) {
 
 function openRegularPricesDialog() {
     Office.context.ui.displayDialogAsync(
-        "https://kirryya.github.io/addIn//regular-prices.html",
+        "https://kirryya.github.io/addIn/regular-prices.html",
         { height: 92, width: 52, displayInIframe: true },
         (result) => {
             const dialog = result.value;
@@ -178,7 +178,7 @@ function arrayBufferToBase64(buffer) {
 
 function competitivePrices(event) {
     Office.context.ui.displayDialogAsync(
-        "https://kirryya.github.io/addIn//competitive-prices.html",
+        "https://kirryya.github.io/addIn/competitive-prices.html",
         { height: 92, width: 44, displayInIframe: true }
     );
 
@@ -188,6 +188,10 @@ function competitivePrices(event) {
 }
 
 function KVI(event) {
+    Office.context.ui.displayDialogAsync(
+        "https://kirryya.github.io/addIn/ctm-prices.html",
+        { height: 92, width: 44, displayInIframe: true }
+    );
 
     if (event && typeof event.completed === "function") {
         event.completed();
@@ -195,6 +199,10 @@ function KVI(event) {
 }
 
 function CTM(event) {
+    Office.context.ui.displayDialogAsync(
+        "https://kirryya.github.io/addIn/kvi-prices.html",
+        { height: 92, width: 44, displayInIframe: true }
+    );
 
     if (event && typeof event.completed === "function") {
         event.completed();
