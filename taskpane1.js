@@ -189,7 +189,7 @@ function competitivePrices(event) {
 
 function KVI(event) {
     Office.context.ui.displayDialogAsync(
-        "https://kirryya.github.io/addIn/ctm-prices.html",
+        "https://kirryya.github.io/addIn/kvi-prices.html",
         { height: 92, width: 52, displayInIframe: true }
     );
 
@@ -200,7 +200,7 @@ function KVI(event) {
 
 function CTM(event) {
     Office.context.ui.displayDialogAsync(
-        "https://kirryya.github.io/addIn/kvi-prices.html",
+        "https://kirryya.github.io/addIn/ctm-prices.html",
         { height: 92, width: 52, displayInIframe: true }
     );
 
