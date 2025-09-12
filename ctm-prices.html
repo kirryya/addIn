@@ -11,7 +11,7 @@
 <body>
 
 <div id="settingsModal">
-        <span class="title">Регулярное розничное ценообразование</span>
+        <span class="title">Ценообразование Собственных торговых марок (СТМ)</span>
     <div id="tabs">
         <button class="tab-button active" data-tab="general" type="button">Категории товаров</button>
         <button class="tab-button" data-tab="advanced" type="button">Параметры</button>
@@ -54,8 +54,8 @@
                 <div id="subTabs">
                     <button class="sub-tab-button active" data-subtab="license" type="button">Правила</button>
                     <button class="sub-tab-button" data-subtab="codes" type="button">Ценовые сегменты</button>
-                    <button class="sub-tab-button" data-subtab="kvi" type="button">Супер KVI</button>
-                    <button class="sub-tab-button" data-subtab="groups" type="button">Конкурентное ЦО</button>
+<!--                    <button class="sub-tab-button" data-subtab="kvi" type="button">Супер KVI</button>-->
+<!--                    <button class="sub-tab-button" data-subtab="groups" type="button">Конкурентное ЦО</button>-->
 <!--                    <button class="sub-tab-button" data-subtab="categories" type="button">Продвинутое ЦО</button>-->
 <!--                    <button class="sub-tab-button" data-subtab="subcategories" type="button">Параметры расчета</button>-->
 <!--                    <button class="sub-tab-button" data-subtab="extra" type="button">Системные</button>-->
@@ -88,20 +88,20 @@
 <!--                                Использовать вероятностный подход-->
 <!--                            </label>-->
 <!--                        </div>-->
-                        <div class="checkbox-title">
-                                <label class="custom-checkbox">
-                                    <input type="checkbox" name="licenseCheckbox2" data-target="#licenseInput1">
-                                    <span></span>
-                                    Компенсировать снижение целевых показателей
-                                </label>
-                            </div>
-                        <div class="sub-tab-container">
-                            <div class="sub-tab-container_subtitle">
-                                <label for="licenseInput1" class="subtitle">Доля Backbasket</label>
-                                <input type="number" id="licenseInput1" name="licenseInput1" class="key_input double"
-                                       autocomplete="off" min="0" max="100" step="1" placeholder="Ведите числовое значение от 0 до 100" required>
-                            </div>
-                        </div>
+<!--                        <div class="checkbox-title">-->
+<!--                                <label class="custom-checkbox">-->
+<!--                                    <input type="checkbox" name="licenseCheckbox2" data-target="#licenseInput1">-->
+<!--                                    <span></span>-->
+<!--                                    Компенсировать снижение целевых показателей-->
+<!--                                </label>-->
+<!--                            </div>-->
+<!--                        <div class="sub-tab-container">-->
+<!--                            <div class="sub-tab-container_subtitle">-->
+<!--                                <label for="licenseInput1" class="subtitle">Доля Backbasket</label>-->
+<!--                                <input type="number" id="licenseInput1" name="licenseInput1" class="key_input double"-->
+<!--                                       autocomplete="off" min="0" max="100" step="1" placeholder="Ведите числовое значение от 0 до 100" required>-->
+<!--                            </div>-->
+<!--                        </div>-->
 <!--                        <div class="checkbox-title">-->
 <!--                                <label class="custom-checkbox">-->
 <!--                                    <input type="checkbox" name="licenseCheckbox3" data-target="#licenseCheckbox3">-->
@@ -109,30 +109,30 @@
 <!--                                    Подбор оптимальных параметров расчета-->
 <!--                                </label>-->
 <!--                        </div>-->
-                        <div class="checkbox-title">
-                                <label class="custom-checkbox">
-                                    <input type="checkbox" id="useCodesCheckbox" name="useCodes">
-                                    <span></span>
-                                    Проверять на предел снижения рентабельности
-                                </label>
-                            </div>
-                        <div class="sub-tab-container" id="codesInputs1">
-                            <div class="sub-tab-container_subtitle">
-                                <label for="licenseInput11" class="subtitle">Предел снижения рентабельности, %</label>
-                                <input type="number" id="licenseInput11" name="licenseInput11" class="key_input double"
-                                       autocomplete="off" min="0" max="100" placeholder="Ведите число от 0 до 100">
-                            </div>
-                            <div class="sub-tab-container_subtitle">
-                                <label for="licenseInput12" class="subtitle">Глубина поиска предыдущей ЗЦ и РЦ, дней</label>
-                                <input type="number" id="licenseInput12" name="licenseInput12" class="key_input double"
-                                       autocomplete="off" min="0" step="1" placeholder="Ведите число дней">
-                            </div>
-                            <div class="sub-tab-container_subtitle">
-                                <label for="licenseInput13" class="subtitle">Глубина поиска предыдущей ЗЦ и РЦ, дней</label>
-                                <input type="number" id="licenseInput13" name="licenseInput13" class="key_input double"
-                                       autocomplete="off" min="0"  step="1" placeholder="Ведите число дней">
-                            </div>
-                        </div>
+<!--                        <div class="checkbox-title">-->
+<!--                                <label class="custom-checkbox">-->
+<!--                                    <input type="checkbox" id="useCodesCheckbox" name="useCodes">-->
+<!--                                    <span></span>-->
+<!--                                    Проверять на предел снижения рентабельности-->
+<!--                                </label>-->
+<!--                            </div>-->
+<!--                        <div class="sub-tab-container" id="codesInputs1">-->
+<!--                            <div class="sub-tab-container_subtitle">-->
+<!--                                <label for="licenseInput11" class="subtitle">Предел снижения рентабельности, %</label>-->
+<!--                                <input type="number" id="licenseInput11" name="licenseInput11" class="key_input double"-->
+<!--                                       autocomplete="off" min="0" max="100" placeholder="Ведите число от 0 до 100">-->
+<!--                            </div>-->
+<!--                            <div class="sub-tab-container_subtitle">-->
+<!--                                <label for="licenseInput12" class="subtitle">Глубина поиска предыдущей ЗЦ и РЦ, дней</label>-->
+<!--                                <input type="number" id="licenseInput12" name="licenseInput12" class="key_input double"-->
+<!--                                       autocomplete="off" min="0" step="1" placeholder="Ведите число дней">-->
+<!--                            </div>-->
+<!--                            <div class="sub-tab-container_subtitle">-->
+<!--                                <label for="licenseInput13" class="subtitle">Глубина поиска предыдущей ЗЦ и РЦ, дней</label>-->
+<!--                                <input type="number" id="licenseInput13" name="licenseInput13" class="key_input double"-->
+<!--                                       autocomplete="off" min="0"  step="1" placeholder="Ведите число дней">-->
+<!--                            </div>-->
+<!--                        </div>-->
 <!--                        <div class="sub-tab-container">-->
 <!--                            <div class="sub-tab-container_subtitle" id="licenseCheckbox3">-->
 <!--                                <label for="licenseInput2" class="subtitle">Прирост показателя, %</label>-->
@@ -148,18 +148,18 @@
                                 <input type="text" id="licenseInput4" name="licenseInput4" class="key_input"
                                        autocomplete="off" min="0" max="100" placeholder="Ведите число от 0 до 100" required>
                         </div>
-                        <div class="sub-tab-container">
-                            <div class="sub-tab-container_subtitle">
-                                <label for="sheetCount1" class="subtitle">Предел снижения всех товаров, кроме KVI, СТМ, КЦО и Новинок, %</label>
-                                <input type="text" id="sheetCount1" name="sheetCount" class="key_input double"
-                                       autocomplete="off" min="0" max="100" placeholder="Ведите число от 0 до 100" required>
-                            </div>
-                            <div class="sub-tab-container_subtitle">
-                                <label for="sheetCount2" class="subtitle">Предел увеличения цены всех товаров, кроме KVI, СТМ и Новинок, %</label>
-                                <input type="text" id="sheetCount2" name="sheetCount" class="key_input double"
-                                       autocomplete="off" min="0" max="100" placeholder="Ведите число от 0 до 100" required>
-                            </div>
-                        </div>
+<!--                        <div class="sub-tab-container">-->
+<!--                            <div class="sub-tab-container_subtitle">-->
+<!--                                <label for="sheetCount1" class="subtitle">Предел снижения всех товаров, кроме KVI, СТМ, КЦО и Новинок, %</label>-->
+<!--                                <input type="text" id="sheetCount1" name="sheetCount" class="key_input double"-->
+<!--                                       autocomplete="off" min="0" max="100" placeholder="Ведите число от 0 до 100" required>-->
+<!--                            </div>-->
+<!--                            <div class="sub-tab-container_subtitle">-->
+<!--                                <label for="sheetCount2" class="subtitle">Предел увеличения цены всех товаров, кроме KVI, СТМ и Новинок, %</label>-->
+<!--                                <input type="text" id="sheetCount2" name="sheetCount" class="key_input double"-->
+<!--                                       autocomplete="off" min="0" max="100" placeholder="Ведите число от 0 до 100" required>-->
+<!--                            </div>-->
+<!--                        </div>-->
                         <div class="sub-tab-container">
                             <div class="sub-tab-container_subtitle">
                                 <label for="sheetCount3" class="subtitle">Ограничение изменения цены, %</label>
@@ -187,7 +187,7 @@
                                     </label>
                                     <div class="custom-select-wrapper">
                                         <div class="custom-select" >
-                                            <div class="custom-select-trigger">Все</div>
+                                            <div class="custom-select-trigger">День</div>
                                             <div class="custom-options">
                                                 <span class="custom-option selected" data-value="1">День</span>
                                                 <span class="custom-option" data-value="2">Неделя</span>
@@ -280,7 +280,41 @@
                                     </label>
                                 </div>
                             </div>
+
                         </div>
+                        <div class="sub-tab-container_subtitle">
+                            <label for="kvi15" class="subtitle">Ценовой разрыв СТМ, %</label>
+                            <input type="text" id="kvi15" name="kvi15" class="key_input double"
+                                   autocomplete="off" min="0" max="100" placeholder="Ведите число от 0 до 100">
+                        </div>
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="codesCheckbox31">
+                                    <span></span>
+                                    Определить Брэнд цель для СТМ автоматически
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="codesCheckbox32">
+                                    <span></span>
+                                    Расчёт по Price Families
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="checkbox-title">
+                                <label class="custom-checkbox doubleCheckbox">
+                                    <input type="checkbox" name="codesCheckbox33">
+                                    <span></span>
+                                    Жёсткий Price Families
+                                </label>
+                            </div>
+                        </div>
+
 <!--                        <div class="sub-tab-container">-->
 <!--                            <div class="sub-tab-container_subtitle">-->
 <!--                                <label for="codesInput7" class="subtitle">Количество сегментов</label>-->
