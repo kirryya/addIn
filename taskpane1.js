@@ -126,9 +126,9 @@ function openNewTemplate(event) {
 
             // данные берём из файлов
             const files = [
-                { name: "Цены конкурентов", path: "https://kirryya.github.io/addIn/TemplateCompetitors.xlsx", sheetName: "Цены конкурентов" },
-                { name: "Продажи", path: "https://kirryya.github.io/addIn/TemplateSales_1.xlsx", sheetName: "Продажи" },
-                { name: "Ассортимент", path: "https://kirryya.github.io/addIn/TemplateLastPrices.xlsx", sheetName: "Ассортимент" },
+                { name: "Цены конкурентов", path: "https://kirryya.github.io/addIn/Template2.xlsx", sheetName: "Цены конкурентов" },
+                { name: "Продажи", path: "https://kirryya.github.io/addIn/Template1.xlsx", sheetName: "Продажи" },
+                { name: "Ассортимент", path: "https://kirryya.github.io/addIn/Template2.xlsx", sheetName: "Ассортимент" },
             ];
 
             for (const file of files) {
