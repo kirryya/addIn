@@ -151,24 +151,24 @@
                         <div class="sub-tab-container">
                             <div class="sub-tab-container_subtitle">
                                 <label for="sheetCount1" class="subtitle">Предел снижения всех товаров, кроме KVI, СТМ, КЦО и Новинок, %</label>
-                                <input type="text" id="sheetCount1" name="sheetCount" class="key_input double"
+                                <input type="text" id="sheetCount1" name="sheetCount1" class="key_input double"
                                        autocomplete="off" min="0" max="100" placeholder="Ведите число от 0 до 100" required>
                             </div>
                             <div class="sub-tab-container_subtitle">
                                 <label for="sheetCount2" class="subtitle">Предел увеличения цены всех товаров, кроме KVI, СТМ и Новинок, %</label>
-                                <input type="text" id="sheetCount2" name="sheetCount" class="key_input double"
+                                <input type="text" id="sheetCount2" name="sheetCount2" class="key_input double"
                                        autocomplete="off" min="0" max="100" placeholder="Ведите число от 0 до 100" required>
                             </div>
                         </div>
                         <div class="sub-tab-container">
                             <div class="sub-tab-container_subtitle">
                                 <label for="sheetCount3" class="subtitle">Ограничение изменения цены, %</label>
-                                <input type="text" id="sheetCount3" name="sheetCount" class="key_input double"
+                                <input type="text" id="sheetCount3" name="sheetCount3" class="key_input double"
                                        autocomplete="off" min="0" max="100" placeholder="Ведите число от 0 до 100" required>
                             </div>
                             <div class="sub-tab-container_subtitle">
                                 <label for="sheetCount4" class="subtitle">Предел увеличения цены за период, %</label>
-                                <input type="text" id="sheetCount4" name="sheetCount" class="key_input double"
+                                <input type="text" id="sheetCount4" name="sheetCount4" class="key_input double"
                                        autocomplete="off" min="0" max="100" placeholder="Ведите число от 0 до 100" required>
                             </div>
                         </div>
@@ -176,7 +176,7 @@
                             <div class="sub-tab-container_subtitle">
                                 <div class="sub-tab-container_subtitle">
                                     <label for="sheetCount5" class="subtitle">Минимальная рентабельность для ЗЦ поставщиков, %</label>
-                                    <input type="text" id="sheetCount5" name="sheetCount" class="key_input double"
+                                    <input type="text" id="sheetCount5" name="sheetCount5" class="key_input double"
                                            autocomplete="off" min="0" max="100" placeholder="Ведите число от 0 до 100" required>
                                 </div>
                             </div>
@@ -1086,139 +1086,168 @@
         });
     });
 
-    // Office.onReady(() => {
-    //     const form = document.getElementById("settingsForm");
-    //     const closeBtn = document.getElementById("close-button");
-    //
-    //     form.onsubmit = async (e) => {
-    //         e.preventDefault();
-    //
-    //         // 1. Собираем данные формы
-    //         const formData = new FormData(form);
-    //         let payload = {};
-    //         for (let [k, v] of formData.entries()) payload[k] = v;
-    //
-    //         // 2. Сначала получаем список доступных листов
-    //         // let sheetsInfo = [];
-    //         // await Excel.run(async context => {
-    //         //     const sheets = context.workbook.worksheets;
-    //         //     sheets.load("items/name");
-    //         //     await context.sync();
-    //         //     sheetsInfo = sheets.items.map(s => s.name);
-    //         // });
-    //
-    //         // 3. Обрабатываем нужные листы
-    //         // const sheetNames = ["Ассортимент", "Продажи", "Цены конкурентов"];
-    //         // let filesToSend = [];
-    //
-    //         // for (const sheetName of sheetNames) {
-    //         //     if (!sheetsInfo.includes(sheetName)) {
-    //         //         console.warn(`Лист ${sheetName} не найден`);
-    //         //         continue;
-    //         //     }
-    //         //
-    //         //     await Excel.run(async context => {
-    //         //         try {
-    //         //             const sheet = context.workbook.worksheets.getItem(sheetName);
-    //         //             const range = sheet.getUsedRange();
-    //         //             range.load("values");
-    //         //             await context.sync();
-    //         //
-    //         //             const values = range.values;
-    //         //             payload[sheetName] = values;
-    //         //             filesToSend.push({ sheetName, values });
-    //         //         } catch (err) {
-    //         //             console.error(`Ошибка при обработке листа ${sheetName}:`, err);
-    //         //         }
-    //         //     });
-    //         // }
-    //
-    //         // 4. Конвертируем данные в XLSX файлы через SheetJS
-    //         // for (const file of filesToSend) {
-    //         //     const ws = XLSX.utils.aoa_to_sheet(file.values);
-    //         //     const newWb = XLSX.utils.book_new();
-    //         //     XLSX.utils.book_append_sheet(newWb, ws, file.sheetName);
-    //         //     file.base64 = XLSX.write(newWb, { bookType: "xlsx", type: "base64" });
-    //         // }
-    //
-    //         // 5. Отправляем payload + файлы на сервер
-    //         // try {
-    //         //     const formDataToSend = new FormData();
-    //         //
-    //         //     for (const key in payload) formDataToSend.append(key, JSON.stringify(payload[key]));
-    //         //
-    //         //     filesToSend.forEach(file => {
-    //         //         const byteString = atob(file.base64);
-    //         //         const ab = new ArrayBuffer(byteString.length);
-    //         //         const ia = new Uint8Array(ab);
-    //         //         for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
-    //         //         const blob = new Blob([ab], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-    //         //         formDataToSend.append("files[]", blob, `${file.sheetName}.xlsx`);
-    //         //     });
-    //         //
-    //         //     const response = await fetch("https://your-server.com/api/process", {
-    //         //         method: "POST",
-    //         //         body: formDataToSend
-    //         //     });
-    //         //
-    //         //     const result = await response.json();
-    //         //     console.log("Ответ сервера:", result);
-    //         // } catch (err) {
-    //         //     console.error("Ошибка при отправке:", err);
-    //         // }
-    //
-    //         if (Office.context.ui?.messageParent) Office.context.ui.messageParent("close");
-    //     };
-    //
-    //     closeBtn.onclick = () => {
-    //         if (Office.context.ui?.messageParent) Office.context.ui.messageParent("close");
-    //     };
-    // });
-
     Office.onReady(() => {
         const form = document.getElementById("settingsForm");
-        // const closeBtn = document.getElementById("close-button");
-        const statusArea = document.getElementById("statusArea");
+        const closeBtn = document.getElementById("close-button");
 
-        async function fetchTime() {
-            try {
-                const res = await fetch("https://worldtimeapi.org/api/timezone/Europe/Moscow");
-                const data = await res.json();
-                console.log("Текущее время:", data.datetime);
-            } catch (err) {
-                console.error("Ошибка запроса времени:", err);
-            }
-        }
-
-        async function runRequests() {
-            statusArea.innerHTML = `
-      <div class="loader"></div>
-      <p id="progressText">0 / 20</p>
-    `;
-
-            for (let i = 0; i < 20; i++) {
-                await fetchTime();
-                document.getElementById("progressText").innerText = `${i + 1} / 20`;
-                await new Promise(r => setTimeout(r, 1000)); // пауза 1 сек
-            }
-
-            statusArea.innerHTML = `
-      <div class="checkmark"></div>
-      <p>Готово!</p>
-    `;
-        }
-
-        form.addEventListener("submit", (e) => {
+        form.onsubmit = async (e) => {
             e.preventDefault();
-            runRequests();
-        });
 
-        // closeBtn.addEventListener("click", () => {
-        //     if (Office.context.ui?.messageParent) {
-        //         Office.context.ui.messageParent(JSON.stringify({ action: "close" }));
-        //     }
-        // });
+            // 1. Собираем данные формы
+            const formData = new FormData(form);
+            let payload = {};
+            for (let [k, v] of formData.entries()) {
+                if (payload[k]) {
+                    if (!Array.isArray(payload[k])) payload[k] = [payload[k]];
+                    payload[k].push(v);
+                } else {
+                    payload[k] = v;
+                }
+            }
+
+            // 2. Получаем список листов
+            let sheetsInfo = [];
+            await Excel.run(async context => {
+                const sheets = context.workbook.worksheets;
+                sheets.load("items/name");
+                await context.sync();
+                sheetsInfo = sheets.items.map(s => s.name);
+            });
+
+            // 3. Обрабатываем только нужные листы
+            const sheetNames = ["Ассортимент", "Продажи", "Цены конкурентов"];
+            let filesToSend = [];
+
+            await Excel.run(async context => {
+                const ranges = [];
+
+                for (const sheetName of sheetNames) {
+                    if (!sheetsInfo.includes(sheetName)) {
+                        console.warn(`Лист ${sheetName} не найден`);
+                        continue;
+                    }
+
+                    const sheet = context.workbook.worksheets.getItem(sheetName);
+                    const range = sheet.getUsedRange();
+                    range.load("values");
+
+                    ranges.push({ sheetName, range });
+                }
+
+                await context.sync();
+
+                filesToSend = ranges.map(r => ({
+                    sheetName: r.sheetName,
+                    values: r.range.values
+                }));
+
+                // кладём данные в payload тоже
+                for (const f of filesToSend) {
+                    payload[f.sheetName] = f.values;
+                }
+            });
+
+            // 4. Конвертируем данные в XLSX файлы через SheetJS
+            for (const file of filesToSend) {
+                const ws = XLSX.utils.aoa_to_sheet(file.values);
+                const newWb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(newWb, ws, file.sheetName);
+                file.base64 = XLSX.write(newWb, { bookType: "xlsx", type: "base64" });
+            }
+
+            // 5. Отправляем payload (как JSON) + файлы
+            try {
+                const formDataToSend = new FormData();
+
+                // весь payload кладём одним json-блобом
+                formDataToSend.append(
+                    "payload",
+                    new Blob([JSON.stringify(payload)], { type: "application/json" })
+                );
+
+                // добавляем файлы
+                filesToSend.forEach(file => {
+                    const byteString = atob(file.base64);
+                    const ab = new ArrayBuffer(byteString.length);
+                    const ia = new Uint8Array(ab);
+                    for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
+
+                    const blob = new Blob([ab], {
+                        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    });
+
+                    formDataToSend.append("files[]", blob, `${file.sheetName}.xlsx`);
+                });
+
+                const response = await fetch("https://your-server.com/api/process", {
+                    method: "POST",
+                    body: formDataToSend
+                });
+
+                const result = await response.json();
+                console.log("Ответ сервера:", result);
+            } catch (err) {
+                console.error("Ошибка при отправке:", err);
+            }
+
+            // 6. Закрыть taskpane
+            if (Office.context.ui && typeof Office.context.ui.messageParent === "function") {
+                Office.context.ui.messageParent("close");
+            }
+        };
+
+        closeBtn.onclick = () => {
+            if (Office.context.ui && typeof Office.context.ui.messageParent === "function") {
+                Office.context.ui.messageParent("close");
+            }
+        };
     });
+
+
+    // Office.onReady(() => {
+    //     const form = document.getElementById("settingsForm");
+    //     // const closeBtn = document.getElementById("close-button");
+    //     const statusArea = document.getElementById("statusArea");
+    //
+    //     async function fetchTime() {
+    //         try {
+    //             const res = await fetch("https://worldtimeapi.org/api/timezone/Europe/Moscow");
+    //             const data = await res.json();
+    //             console.log("Текущее время:", data.datetime);
+    //         } catch (err) {
+    //             console.error("Ошибка запроса времени:", err);
+    //         }
+    //     }
+    //
+    //     async function runRequests() {
+    //         statusArea.innerHTML = `
+    //   <div class="loader"></div>
+    //   <p id="progressText">0 / 20</p>
+    // `;
+    //
+    //         for (let i = 0; i < 20; i++) {
+    //             await fetchTime();
+    //             document.getElementById("progressText").innerText = `${i + 1} / 20`;
+    //             await new Promise(r => setTimeout(r, 1000)); // пауза 1 сек
+    //         }
+    //
+    //         statusArea.innerHTML = `
+    //   <div class="checkmark"></div>
+    //   <p>Готово!</p>
+    // `;
+    //     }
+    //
+    //     form.addEventListener("submit", (e) => {
+    //         e.preventDefault();
+    //         runRequests();
+    //     });
+    //
+    //     // closeBtn.addEventListener("click", () => {
+    //     //     if (Office.context.ui?.messageParent) {
+    //     //         Office.context.ui.messageParent(JSON.stringify({ action: "close" }));
+    //     //     }
+    //     // });
+    // });
 
     document.addEventListener("DOMContentLoaded", () => {
 
