@@ -76,29 +76,28 @@ function newTemplate(event) {
 }
 
 function regularPrices(event) {
-    if (!isLicenseOk()) {
-        // Ключ не введён — сначала просим пользователя ввести
-        Office.context.ui.displayDialogAsync(
-            "https://kirryya.github.io/addIn/taskpane.html",
-            { height: 44, width: 40, displayInIframe: true },
-            (asyncResult) => {
-                const dialog = asyncResult.value;
-
-                dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
-                    if (args.message === "licenseOk") {
-                        saveLicenseAndContinue(() => {
-                            dialog.close();
-                            setTimeout(() => {
-                                openRegularPricesDialog();
-                            }, 1000);
-                        });
-                    }
-                });
+      Office.context.ui.displayDialogAsync(
+        "https://kirryya.github.io/addIn/regular-prices.html",
+        { height: 92, width: 52, displayInIframe: true },
+        (asyncResult) => {
+            if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+                console.error("Ошибка открытия диалога:", asyncResult.error.message);
+                return;
             }
-        );
-    } else {
-        openRegularPricesDialog();
-    }
+
+            const dialog = asyncResult.value; // вот он — объект dialog
+            console.log("Dialog открыт");
+
+            // слушаем сообщения из диалога
+            dialog.addEventHandler(
+                Office.EventType.DialogMessageReceived,
+                (args) => {
+                    console.log("Сообщение из диалога:", args.message);
+                    alert("Из диалога пришло: " + args.message);
+                }
+            );
+        }
+    );
 
     if (event && typeof event.completed === "function") event.completed();
 }
@@ -217,6 +216,7 @@ function CTM(event) {
         event.completed();
     }
 }
+
 
 
 
