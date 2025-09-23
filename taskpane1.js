@@ -77,18 +77,23 @@ function newTemplate(event) {
 
 function regularPrices(event) {
     Office.context.ui.displayDialogAsync(
-            "https://kirryya.github.io/addIn/regular-prices.html",
+        "https://kirryya.github.io/addIn/regular-prices.html",
         {height: 92, width: 52, displayInIframe: true},
         (asyncResult) => {
             const dialog = asyncResult.value;
 
             // Слушаем сообщения из диалога
-            dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
-                console.log("Сообщение из диалога:", args.message);
+            dialog.addEventHandler(Office.EventType.DialogMessageReceived, async (args) => {
                 if (args.message === "Hello") {
-                    // Сохраняем ключ в Office Settings
-                    console.log("Hello from dialog")
+                    // Записываем значение в ячейку A1
+                    await Excel.run(async (context) => {
+                        const sheet = context.workbook.worksheets.getActiveWorksheet();
+                        const range = sheet.getRange("A1");
+                        range.values = [["Рш"]];  // Значение, которое хотим вставить
+                        await context.sync();
+                    });
 
+                    dialog.close();
                 }
             });
         }
@@ -213,6 +218,7 @@ function CTM(event) {
         event.completed();
     }
 }
+
 
 
 
