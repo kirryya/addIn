@@ -84,17 +84,15 @@ function regularPrices(event) {
 
             // Слушаем сообщения из диалога
             dialog.addEventHandler(Office.EventType.DialogMessageReceived, async (args) => {
-                if (args.message === "Hello") {
                     // Записываем значение в ячейку A1
                     await Excel.run(async (context) => {
                         const sheet = context.workbook.worksheets.getActiveWorksheet();
                         const range = sheet.getRange("A1");
-                        range.values = [["Рш"]];  // Значение, которое хотим вставить
+                        range.values = [[args.message]];  // Значение, которое хотим вставить
                         await context.sync();
                     });
 
                     dialog.close();
-                }
             });
         }
     );
@@ -218,6 +216,7 @@ function CTM(event) {
         event.completed();
     }
 }
+
 
 
 
