@@ -1087,7 +1087,7 @@
         });
     });
 
-   Office.onReady(() => {
+  Office.onReady(() => {
         const form = document.getElementById("settingsForm");
 
         form.onsubmit = (e) => {
@@ -1100,7 +1100,7 @@
             }
 
             // Отправляем данные родителю (taskpane)
-            Office.context.ui.messageParent("Hello");
+            Office.context.ui.messageParent(JSON.stringify(payload));
             console.log("Данные формы отправлены в taskpane:", payload);
         };
     });
@@ -1170,4 +1170,5 @@
 </body>
 
 </html>
+
 
