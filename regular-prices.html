@@ -1093,7 +1093,7 @@
 
         form.onsubmit = (e) => {
             e.preventDefault();
-
+            console.log("Form submitted!");
             const formData = new FormData(form);
             let payload = {};
             for (let [k, v] of formData.entries()) {
@@ -1102,6 +1102,7 @@
 
             // Отправляем данные родителю (taskpane)
             Office.context.ui.messageParent(JSON.stringify(payload));
+            console.log("Данные формы отправлены в taskpane:", payload);
         };
 
         // closeBtn.onclick = () => {

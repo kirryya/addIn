@@ -107,100 +107,114 @@ function openRegularPricesDialog() {
     Office.context.ui.displayDialogAsync(
         "https://kirryya.github.io/addIn/regular-prices.html",
         { height: 92, width: 52, displayInIframe: true },
-        (result) => {
-            const dialog = result.value;
+        (asyncResult) => {
+            if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+                console.error("Ошибка открытия диалога:", asyncResult.error.message);
+                return;
+            }
 
-            dialog.addEventHandler(
-                Office.EventType.DialogMessageReceived,
-                async (args) => {
-                    if (args.message === "close") {
-                        dialog.close();
-                        return;
-                    }
+            const dialog = asyncResult.value;
 
-                    const formPayload = JSON.parse(args.message);
-                    let payload = { ...formPayload };
-                    let filesToSend = [];
+            dialog.addEventHandler(Office.EventType.DialogMessageReceived, async (args) => {
+                // Логируем все сообщения
+                console.log("Сообщение из диалога:", args.message);
 
-                    console.log(payload)
+                // Если пользователь хочет закрыть окно
+                if (args.message === "close") return;
 
-                    try {
-                        await Excel.run(async (context) => {
-                            const sheets = context.workbook.worksheets;
-                            sheets.load("items/name");
-                            await context.sync();
-
-                            const sheetNames = ["Ассортимент", "Продажи", "Цены конкурентов"];
-                            const ranges = [];
-
-                            for (const sheetName of sheetNames) {
-                                if (!sheets.items.some((s) => s.name === sheetName)) {
-                                    console.warn(`Лист ${sheetName} не найден`);
-                                    continue;
-                                }
-
-                                const sheet = sheets.getItem(sheetName);
-                                const range = sheet.getUsedRangeOrNullObject();
-                                range.load(["values", "isNullObject"]);
-                                ranges.push({ sheetName, range });
-                            }
-
-                            await context.sync();
-
-                            filesToSend = ranges
-                                .filter((r) => !r.range.isNullObject)
-                                .map((r) => ({
-                                    sheetName: r.sheetName,
-                                    values: r.range.values,
-                                }));
-
-                            for (const f of filesToSend) {
-                                payload[f.sheetName] = f.values;
-                            }
-                        });
-                    } catch (err) {
-                        console.error("Ошибка при чтении Excel:", err);
-                    }
-
-                    // конвертируем данные в XLSX
-                    for (const file of filesToSend) {
-                        const ws = XLSX.utils.aoa_to_sheet(file.values);
-                        const newWb = XLSX.utils.book_new();
-                        XLSX.utils.book_append_sheet(newWb, ws, file.sheetName);
-
-                        const wbout = XLSX.write(newWb, { bookType: "xlsx", type: "array" });
-                        file.blob = new Blob([wbout], {
-                            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        });
-                    }
-
-                    // отправка на сервер
-                    try {
-                        const formDataToSend = new FormData();
-                        formDataToSend.append(
-                            "payload",
-                            new Blob([JSON.stringify(payload)], { type: "application/json" })
-                        );
-
-                        filesToSend.forEach((file) => {
-                            formDataToSend.append("files[]", file.blob, `${file.sheetName}.xlsx`);
-                        });
-
-                        const response = await fetch("https://your-server.com/api/process", {
-                            method: "POST",
-                            body: formDataToSend,
-                        });
-
-                        const result = await response.json();
-                        console.log("Ответ сервера:", result);
-                    } catch (err) {
-                        console.error("Ошибка при отправке:", err);
-                    }
+                // Получаем данные формы
+                let formPayload;
+                try {
+                    formPayload = JSON.parse(args.message);
+                } catch {
+                    console.warn("Не удалось распарсить сообщение из диалога:", args.message);
+                    return;
                 }
-            );
+
+                let payload = { ...formPayload };
+                let filesToSend = [];
+
+                try {
+                    await Excel.run(async (context) => {
+                        const sheets = context.workbook.worksheets;
+                        sheets.load("items/name");
+                        await context.sync();
+
+                        const sheetNames = ["Ассортимент", "Продажи", "Цены конкурентов"];
+                        const ranges = [];
+
+                        for (const sheetName of sheetNames) {
+                            if (!sheets.items.some((s) => s.name === sheetName)) {
+                                console.warn(`Лист ${sheetName} не найден`);
+                                continue;
+                            }
+
+                            const sheet = sheets.getItem(sheetName);
+                            const range = sheet.getUsedRangeOrNullObject();
+                            range.load(["values", "isNullObject"]);
+                            ranges.push({ sheetName, range });
+                        }
+
+                        await context.sync();
+
+                        filesToSend = ranges
+                            .filter((r) => !r.range.isNullObject)
+                            .map((r) => ({
+                                sheetName: r.sheetName,
+                                values: r.range.values,
+                            }));
+
+                        for (const f of filesToSend) {
+                            payload[f.sheetName] = f.values;
+                        }
+                    });
+                } catch (err) {
+                    console.error("Ошибка при чтении Excel:", err);
+                    return;
+                }
+
+                // Создаём одну книгу с несколькими листами
+                const mergedWb = XLSX.utils.book_new();
+                for (const file of filesToSend) {
+                    const ws = XLSX.utils.aoa_to_sheet(file.values);
+                    XLSX.utils.book_append_sheet(mergedWb, ws, file.sheetName);
+                }
+
+                const wbout = XLSX.write(mergedWb, { bookType: "xlsx", type: "array" });
+                const mergedBlob = new Blob([wbout], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                });
+
+                // Формируем FormData
+                const formDataToSend = new FormData();
+                formDataToSend.append(
+                    "payload",
+                    new Blob([JSON.stringify(payload)], { type: "application/json" })
+                );
+                formDataToSend.append("files[]", mergedBlob, "all-sheets.xlsx");
+
+                // Отправляем на сервер
+                try {
+                    const response = await fetch("https://your-server.com/api/process", {
+                        method: "POST",
+                        body: formDataToSend,
+                    });
+
+                    const result = await response.json();
+                    console.log("Ответ сервера:", result);
+
+                } catch (err) {
+                    console.error("Ошибка при отправке на сервер:", err);
+                }
+            });
+
+            dialog.addEventHandler(Office.EventType.DialogEventReceived, () => {
+                console.log("Диалог был закрыт пользователем.");
+            });
         }
     );
 }
+
 
 function openNewTemplate(event) {
     (async () => {
@@ -208,7 +222,7 @@ function openNewTemplate(event) {
             const workbook = context.workbook;
 
             // данные берём из файлов
-           const files = [
+            const files = [
                 { name: "Цены конкурентов", path: "https://kirryya.github.io/addIn/Template3.xlsx", sheetName: "Цены конкурентов" },
                 { name: "Продажи", path: "https://kirryya.github.io/addIn/Template1.xlsx", sheetName: "Продажи" },
                 { name: "Ассортимент", path: "https://kirryya.github.io/addIn/Template2.xlsx", sheetName: "Ассортимент" },
@@ -291,4 +305,3 @@ function CTM(event) {
         event.completed();
     }
 }
-
