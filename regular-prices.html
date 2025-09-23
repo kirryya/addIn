@@ -1089,7 +1089,7 @@
 
     Office.onReady(() => {
         const form = document.getElementById("settingsForm");
-        const closeBtn = document.getElementById("close-button");
+        // const closeBtn = document.getElementById("close-button");
 
         form.onsubmit = (e) => {
             e.preventDefault();
@@ -1104,9 +1104,9 @@
             Office.context.ui.messageParent(JSON.stringify(payload));
         };
 
-        closeBtn.onclick = () => {
-            Office.context.ui.messageParent("close");
-        };
+        // closeBtn.onclick = () => {
+        //     Office.context.ui.messageParent("close");
+        // };
     });
 
     // Office.onReady(() => {
