@@ -106,109 +106,24 @@ function regularPrices(event) {
 function openRegularPricesDialog() {
     Office.context.ui.displayDialogAsync(
         "https://kirryya.github.io/addIn/regular-prices.html",
-        { height: 92, width: 52 },
+        { height: 92, width: 52, displayInIframe: true },
         (asyncResult) => {
             if (asyncResult.status === Office.AsyncResultStatus.Failed) {
                 console.error("Ошибка открытия диалога:", asyncResult.error.message);
                 return;
             }
 
-            const dialog = asyncResult.value;
+            const dialog = asyncResult.value; // вот он — объект dialog
+            console.log("Dialog открыт");
 
-            console.log("Dialog opened:", dialog);
-
-            dialog.addEventHandler(Office.EventType.DialogMessageReceived, async (args) => {
-                // Логируем все сообщения
-                console.log("Сообщение из диалога:", args.message);
-
-                // Если пользователь хочет закрыть окно
-                if (args.message === "close") return;
-
-                // Получаем данные формы
-                let formPayload;
-                try {
-                    formPayload = JSON.parse(args.message);
-                } catch {
-                    console.warn("Не удалось распарсить сообщение из диалога:", args.message);
-                    return;
+            // слушаем сообщения из диалога
+            dialog.addEventHandler(
+                Office.EventType.DialogMessageReceived,
+                (args) => {
+                    console.log("Сообщение из диалога:", args.message);
+                    alert("Из диалога пришло: " + args.message);
                 }
-
-                let payload = { ...formPayload };
-                let filesToSend = [];
-
-                try {
-                    await Excel.run(async (context) => {
-                        const sheets = context.workbook.worksheets;
-                        sheets.load("items/name");
-                        await context.sync();
-
-                        const sheetNames = ["Ассортимент", "Продажи", "Цены конкурентов"];
-                        const ranges = [];
-
-                        for (const sheetName of sheetNames) {
-                            if (!sheets.items.some((s) => s.name === sheetName)) {
-                                console.warn(`Лист ${sheetName} не найден`);
-                                continue;
-                            }
-
-                            const sheet = sheets.getItem(sheetName);
-                            const range = sheet.getUsedRangeOrNullObject();
-                            range.load(["values", "isNullObject"]);
-                            ranges.push({ sheetName, range });
-                        }
-
-                        await context.sync();
-
-                        filesToSend = ranges
-                            .filter((r) => !r.range.isNullObject)
-                            .map((r) => ({
-                                sheetName: r.sheetName,
-                                values: r.range.values,
-                            }));
-
-                        for (const f of filesToSend) {
-                            payload[f.sheetName] = f.values;
-                        }
-                    });
-                } catch (err) {
-                    console.error("Ошибка при чтении Excel:", err);
-                    return;
-                }
-
-                // Создаём одну книгу с несколькими листами
-                const mergedWb = XLSX.utils.book_new();
-                for (const file of filesToSend) {
-                    const ws = XLSX.utils.aoa_to_sheet(file.values);
-                    XLSX.utils.book_append_sheet(mergedWb, ws, file.sheetName);
-                }
-
-                const wbout = XLSX.write(mergedWb, { bookType: "xlsx", type: "array" });
-                const mergedBlob = new Blob([wbout], {
-                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                });
-
-                // Формируем FormData
-                const formDataToSend = new FormData();
-                formDataToSend.append(
-                    "payload",
-                    new Blob([JSON.stringify(payload)], { type: "application/json" })
-                );
-                formDataToSend.append("files[]", mergedBlob, "all-sheets.xlsx");
-
-                // Отправляем на сервер
-                try {
-                    const response = await fetch("https://your-server.com/api/process", {
-                        method: "POST",
-                        body: formDataToSend,
-                    });
-
-                    const result = await response.json();
-                    console.log("Ответ сервера:", result);
-
-                } catch (err) {
-                    console.error("Ошибка при отправке на сервер:", err);
-                }
-            });
+            );
         }
     );
 }
@@ -302,6 +217,7 @@ function CTM(event) {
         event.completed();
     }
 }
+
 
 
 
