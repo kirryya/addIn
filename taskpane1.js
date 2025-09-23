@@ -207,14 +207,9 @@ function openRegularPricesDialog() {
                     console.error("Ошибка при отправке на сервер:", err);
                 }
             });
-
-            dialog.addEventHandler(Office.EventType.DialogEventReceived, () => {
-                console.log("Диалог был закрыт пользователем.");
-            });
         }
     );
 }
-
 
 function openNewTemplate(event) {
     (async () => {
@@ -305,4 +300,5 @@ function CTM(event) {
         event.completed();
     }
 }
+
 
