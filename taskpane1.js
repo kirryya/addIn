@@ -106,7 +106,7 @@ function regularPrices(event) {
 function openRegularPricesDialog() {
     Office.context.ui.displayDialogAsync(
         "https://kirryya.github.io/addIn/regular-prices.html",
-        { height: 92, width: 52, displayInIframe: true },
+        { height: 92, width: 52 },
         (asyncResult) => {
             if (asyncResult.status === Office.AsyncResultStatus.Failed) {
                 console.error("Ошибка открытия диалога:", asyncResult.error.message);
@@ -305,3 +305,4 @@ function CTM(event) {
         event.completed();
     }
 }
+
