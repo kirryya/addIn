@@ -1101,8 +1101,8 @@
             }
 
             // Отправляем данные родителю (taskpane)
-            Office.context.ui.messageParent(JSON.stringify(payload));
-            console.log("Данные формы отправлены в taskpane:", payload);
+            Office.context.ui.messageParent("hello from dialog!");
+            console.log("Данные формы отправлены в taskpane:","hello from dialog reg!");
         };
 
         // closeBtn.onclick = () => {
@@ -1173,4 +1173,5 @@
     });
 </script>
 </body>
+
 </html>
