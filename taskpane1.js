@@ -76,30 +76,27 @@ function newTemplate(event) {
 }
 
 function regularPrices(event) {
-      Office.context.ui.displayDialogAsync(
-        "https://kirryya.github.io/addIn/regular-prices.html",
-        { height: 92, width: 52, displayInIframe: true },
+    Office.context.ui.displayDialogAsync(
+            "https://kirryya.github.io/addIn/regular-prices.html",
+        {height: 92, width: 52, displayInIframe: true},
         (asyncResult) => {
-            if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-                console.error("Ошибка открытия диалога:", asyncResult.error.message);
-                return;
-            }
+            const dialog = asyncResult.value;
 
-            const dialog = asyncResult.value; // вот он — объект dialog
-            console.log("Dialog открыт");
+            // Слушаем сообщения из диалога
+            dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
+                console.log("Сообщение из диалога:", args.message);
+                if (args.message === "Hello") {
+                    // Сохраняем ключ в Office Settings
+                    console.log("Hello from dialog")
 
-            // слушаем сообщения из диалога
-            dialog.addEventHandler(
-                Office.EventType.DialogMessageReceived,
-                (args) => {
-                    console.log("Сообщение из диалога:", args.message);
-                    alert("Из диалога пришло: " + args.message);
                 }
-            );
+            });
         }
     );
 
-    if (event && typeof event.completed === "function") event.completed();
+    if (event && typeof event.completed === "function") {
+        event.completed();
+    }
 }
 
 function openRegularPricesDialog() {
@@ -216,6 +213,7 @@ function CTM(event) {
         event.completed();
     }
 }
+
 
 
 
