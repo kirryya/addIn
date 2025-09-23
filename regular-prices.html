@@ -1087,9 +1087,8 @@
         });
     });
 
-    Office.onReady(() => {
+   Office.onReady(() => {
         const form = document.getElementById("settingsForm");
-        // const closeBtn = document.getElementById("close-button");
 
         form.onsubmit = (e) => {
             e.preventDefault();
@@ -1101,13 +1100,9 @@
             }
 
             // Отправляем данные родителю (taskpane)
-            Office.context.ui.messageParent("hello from dialog!");
-            console.log("Данные формы отправлены в taskpane:","hello from dialog reg!");
+            Office.context.ui.messageParent("Hello");
+            console.log("Данные формы отправлены в taskpane:", payload);
         };
-
-        // closeBtn.onclick = () => {
-        //     Office.context.ui.messageParent("close");
-        // };
     });
 
     // Office.onReady(() => {
@@ -1175,3 +1170,4 @@
 </body>
 
 </html>
+
