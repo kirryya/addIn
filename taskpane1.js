@@ -115,6 +115,8 @@ function openRegularPricesDialog() {
 
             const dialog = asyncResult.value;
 
+            console.log("Dialog opened:", dialog);
+
             dialog.addEventHandler(Office.EventType.DialogMessageReceived, async (args) => {
                 // Логируем все сообщения
                 console.log("Сообщение из диалога:", args.message);
@@ -300,5 +302,6 @@ function CTM(event) {
         event.completed();
     }
 }
+
 
 
