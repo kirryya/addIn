@@ -110,11 +110,94 @@ function openRegularPricesDialog() {
         (result) => {
             const dialog = result.value;
 
-            dialog.addEventHandler(Office.EventType.DialogMessageReceived, (args) => {
-                if (args.message === "close") {
+            dialog.addEventHandler(
+                Office.EventType.DialogMessageReceived,
+                async (args) => {
+                    if (args.message === "close") {
+                        dialog.close();
+                        return;
+                    }
+
+                    const formPayload = JSON.parse(args.message);
+                    let payload = { ...formPayload };
+                    let filesToSend = [];
+
+                    try {
+                        await Excel.run(async (context) => {
+                            const sheets = context.workbook.worksheets;
+                            sheets.load("items/name");
+                            await context.sync();
+
+                            const sheetNames = ["Ассортимент", "Продажи", "Цены конкурентов"];
+                            const ranges = [];
+
+                            for (const sheetName of sheetNames) {
+                                if (!sheets.items.some((s) => s.name === sheetName)) {
+                                    console.warn(`Лист ${sheetName} не найден`);
+                                    continue;
+                                }
+
+                                const sheet = sheets.getItem(sheetName);
+                                const range = sheet.getUsedRangeOrNullObject();
+                                range.load(["values", "isNullObject"]);
+                                ranges.push({ sheetName, range });
+                            }
+
+                            await context.sync();
+
+                            filesToSend = ranges
+                                .filter((r) => !r.range.isNullObject)
+                                .map((r) => ({
+                                    sheetName: r.sheetName,
+                                    values: r.range.values,
+                                }));
+
+                            for (const f of filesToSend) {
+                                payload[f.sheetName] = f.values;
+                            }
+                        });
+                    } catch (err) {
+                        console.error("Ошибка при чтении Excel:", err);
+                    }
+
+                    // конвертируем данные в XLSX
+                    for (const file of filesToSend) {
+                        const ws = XLSX.utils.aoa_to_sheet(file.values);
+                        const newWb = XLSX.utils.book_new();
+                        XLSX.utils.book_append_sheet(newWb, ws, file.sheetName);
+
+                        const wbout = XLSX.write(newWb, { bookType: "xlsx", type: "array" });
+                        file.blob = new Blob([wbout], {
+                            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        });
+                    }
+
+                    // отправка на сервер
+                    try {
+                        const formDataToSend = new FormData();
+                        formDataToSend.append(
+                            "payload",
+                            new Blob([JSON.stringify(payload)], { type: "application/json" })
+                        );
+
+                        filesToSend.forEach((file) => {
+                            formDataToSend.append("files[]", file.blob, `${file.sheetName}.xlsx`);
+                        });
+
+                        const response = await fetch("https://your-server.com/api/process", {
+                            method: "POST",
+                            body: formDataToSend,
+                        });
+
+                        const result = await response.json();
+                        console.log("Ответ сервера:", result);
+                    } catch (err) {
+                        console.error("Ошибка при отправке:", err);
+                    }
+
                     dialog.close();
                 }
-            });
+            );
         }
     );
 }
@@ -208,4 +291,3 @@ function CTM(event) {
         event.completed();
     }
 }
-
